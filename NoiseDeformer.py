@@ -2,6 +2,10 @@ import maya.cmds as cmds
 import random
 
 class NoiseDeformer():
+    '''
+        Description : Add noise deformation to the last selected object(polygon, nurbsSurface)
+        Things to change : Noise for nurbsCurve, Apply to all selected objects, Arrange the layout
+    '''
 
     def __init__(self):
         
