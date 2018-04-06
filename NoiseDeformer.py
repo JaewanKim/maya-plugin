@@ -4,7 +4,7 @@ import random
 class NoiseDeformer():
     '''
         Description : Add noise deformation to the last selected object(polygon, nurbsSurface)
-        Things to change : Noise for nurbsCurve, Apply to all selected objects, Arrange the layout
+        Things to change : Apply to all selected objects, Arrange the layout
     '''
 
     def __init__(self):
@@ -49,9 +49,6 @@ class NoiseDeformer():
             
         elif (nodeType == "nurbsSurface" ):
             self.noise_nurbsSurface(self)
-            
-        else:    # (nodeType == "nurbsCurve")
-            print("preparing for nurbsCurve")
     
     
     def noise_poly(self, args):
