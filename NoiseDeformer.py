@@ -4,16 +4,16 @@ import random
 class NoiseDeformer():
     '''
         Description : Add noise deformation to the last selected object(polygon, nurbsSurface)
-        Things to change : Apply to all selected objects, Arrange the layout
+        Things to change : Arrange the layout
     '''
-
+    
     def __init__(self):
         
         self.amount = 0.0
         self.amount_str = ''
         self.selectedObjs = []
         self.obj = ''
-                
+        
         if (cmds.window("noise", exists=True)):
             cmds.deleteUI("noise")
         
@@ -22,7 +22,7 @@ class NoiseDeformer():
         cmds.columnLayout()
         cmds.rowLayout(numberOfColumns=2)
         
-        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=3, field=True)
+        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=2, field=True)
         cmds.button(label="Add Noise", command=self.classify_object)
         
         cmds.setParent("..")
@@ -31,24 +31,29 @@ class NoiseDeformer():
         
     def classify_object(self, args):
         
+        # Exception to prevent when nothing is selected
         self.selectedObjs = cmds.ls(selection=True)
         
         if (len(self.selectedObjs) < 1):
             cmds.error("Please select object at least one!")
         
-        self.obj = self.selectedObjs[-1]
-        
         # Get noise amount from slider group
         self.amount = cmds.floatSliderGrp(self.amount_str, query=True, value=True)
         
-        shapeNode = cmds.listRelatives(self.obj, shapes=True)
-        nodeType = cmds.nodeType(shapeNode)
         
-        if (nodeType == "mesh"):
-            self.noise_poly(self)
+        for i in range(0, len(self.selectedObjs)):
             
-        elif (nodeType == "nurbsSurface" ):
-            self.noise_nurbsSurface(self)
+            self.obj = self.selectedObjs[i]
+            
+            shapeNode = cmds.listRelatives(self.obj, shapes=True)
+            nodeType = cmds.nodeType(shapeNode)
+            
+            # Classify object nodeType and Call method
+            if (nodeType == "mesh"):
+                self.noise_poly(self)
+                
+            elif (nodeType == "nurbsSurface" ):
+                self.noise_nurbsSurface(self)
     
     
     def noise_poly(self, args):
@@ -98,6 +103,6 @@ class NoiseDeformer():
                 cmds.select(vertexStr, replace=True)
                 cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
-        cmds.select(self.obj, replace=True)
+        cmds.select(self.obj, replace=True)        # finish up
 
 NoiseDeformer()
