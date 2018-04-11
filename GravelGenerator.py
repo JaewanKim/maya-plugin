@@ -5,8 +5,9 @@ class GravelGenerator():
     '''
         Description : Generate gravels randomly on selected object
         Things to do
-            1. Sometimes layout doesn't work well
+            1. 
             2. 
+            . layout
     ''' 
     
     def __init__(self):
@@ -49,15 +50,12 @@ class GravelGenerator():
         cmds.button(label="Generate Gravels", command=self.recognize_map)
         cmds.button(label="Reset", command=self.reset)
         
-        
         cmds.setParent("..")
         cmds.showWindow(self.win)
         
         
     def recognize_map(self, args):
-        # Recognize map to scatter gravel. 
-        
-        # Recognize the selected object as a map    # 
+        # Recognize the selected object as a map
         self.selectedObjs = cmds.ls(selection=True)
         
         # Is it necessary exception for len(self.selectedObjs) negative ? Idon't think so..
