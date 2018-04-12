@@ -5,12 +5,14 @@ class GravelGenerator():
     '''
         Description : Generate gravels randomly on selected object
         Things to do
-            1. 
-            2. 
-            . layout
+            1. funtion
+            2. layout
     ''' 
     
     def __init__(self):
+        
+        self.radio = 0
+        self.radio_str = ''
         
         self.amount = 0
         self.amount_str = ''
@@ -35,17 +37,9 @@ class GravelGenerator():
         
         cmds.columnLayout(adjustableColumn=True)
         cmds.rowLayout(numberOfColumns=3)
-
-        # DirectionControl = cmds.radioCollection()
-        # Direction0 = cmds.radioButton(label='Front')
-        # Direction1 = cmds.radioButton(label='Back')
-        # Direction2 = cmds.radioButton(label='Random')
-        # DirectionControl = cmds.radioCollection( DirectionControl, edit=True, select=Direction0 )
         
-#        self.radio_col = cmds.radioCollection()
-#        cmds.radioButtonGrp(label="Generate Type", labelArray2=['File', 'Script'], numberOfRadioButtons=2)
-#        self.radio_col = cmds.radioCollection(self.radio_col, edit=True, select='Script')
-
+        self.radio_str = cmds.radioButtonGrp(label="Generate Type", labelArray2=['File', 'Script'], numberOfRadioButtons=2, select=1)
+        
         cmds.setParent("..")
         
         self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, field=True)
@@ -61,30 +55,35 @@ class GravelGenerator():
         
         cmds.setParent("..")
         cmds.showWindow(self.win)
-
+        
+        
     def get_values(self, args):
-        # Get value of Generate type
+        # Get values of UI Component
+        
+        self.radio = cmds.radioButtonGrp(self.radio_str, query=True, select=True)
+        
         self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)
         self.global_size = cmds.intSliderGrp(self.global_size_str, query=True, value=True)
-        self.max_size = floatSliderGrp(self.max_size_str, query=True, value=True)
-        self.min_size = floatSliderGrp(self.min_size_str, query=True, value=True)
+        self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
+        self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
         
-        # self.radioCol = cmds.radioCollection(DirectionControl, query=True, sl=True)
-        # getSelectRadioVal = cmds.radioButton(self.radioCol, query=True, select=True)
+        if (self.radio == 1):    # File
+            self.get_gravel_file(self)
         
-#        self.radio_collect = cmds.radioCollection(self.radio_col, query=True, select=True)
-#        getRadioVal = cmds.radioButton(self.radio_collect, query=True, select=True)
-
-        print(self.amount + self.global_size)
-
-    def make_gravel(self, args):
-        # Generate gravels by script
-        pass
-
+        elif (self.radio == 2):  # Script
+            self.get_gravel_script(self)
+        
+        
     def get_gravel_file(self, args):
         # Get the files of gravel, size it randomly
         # I/O File obj, poly, 
         pass
+        
+        
+    def get_gravel_script(self, args):
+        # Generate gravels by script
+        pass
+        
         
     def recognize_map(self, args):
         # Recognize the selected object as a map
@@ -102,6 +101,7 @@ class GravelGenerator():
         # Scatter gravels on grid
         pass
         
+
     def scatter_gravel_map(self, args):
         # Scatter gravels on map
         # Get vertex of the map
