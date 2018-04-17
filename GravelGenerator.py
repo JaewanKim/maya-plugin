@@ -5,7 +5,7 @@ class GravelGenerator():
     '''
         Description : Generate gravels randomly on selected object
         Things to do
-            1. funtion
+            1. funtion : get_gravel_file, get_gravel_script, scatter_gravel_map, reset
             2. layout
     ''' 
     
@@ -51,7 +51,8 @@ class GravelGenerator():
         
         cmds.setParent("..")
         cmds.button(label="Generate Gravels", command=self.get_values)
-        cmds.button(label="Reset", command=self.reset)
+        cmds.button(label="Reset", )
+        cmds.button(label="Test for scatter on grid", command=self.scatter_gravel_grid)
         
         cmds.setParent("..")
         cmds.showWindow(self.win)
@@ -77,16 +78,18 @@ class GravelGenerator():
     def get_gravel_file(self, args):
         # Get the files of gravel, size it randomly
         # I/O File obj, poly, 
-        pass
+        print("get_gravel_file")
         
         
     def get_gravel_script(self, args):
         # Generate gravels by script
-        pass
+        print("get_gravel_script")
         
         
     def recognize_map(self, args):
         # Recognize the selected object as a map
+        print("recognize_map")
+        
         self.selectedObjs = cmds.ls(selection=True)
         
         # Is it necessary exception for len(self.selectedObjs) negative ? Idon't think so..
@@ -99,17 +102,38 @@ class GravelGenerator():
         
     def scatter_gravel_grid(self, args):
         # Scatter gravels on grid
-        pass
         
-
+        print("scatter_gravel_grid")
+        
+        self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)    # Will be deleted
+        print(self.amount)
+        
+        gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
+        
+        for i in range(0, self.amount):    # for obj in objlist:
+            
+            x = random.uniform(-10.0, 10.0)
+            z = random.uniform(-10.0, 10.0)
+            
+            mycube = cmds.polyCube(h=3, w=3, d=3, n="randPolyCube#")
+            cmds.move(x, 0.0, z, mycube)    # obj in 
+            cmds.rotate(random.random()*1000, random.random()*1000, random.random()*1000, mycube)
+            
+            cmds.parent(mycube, gravelGrp)
+        
+        cmds.select(gravelGrp, replace=True)
+        
+        
     def scatter_gravel_map(self, args):
         # Scatter gravels on map
+        print("scatter_gravel_map")
+        
         # Get vertex of the map
-        pass
-                
+        
         
     def reset(self, args):
         # Reset the values set by a user
-        pass
+        print("reset")
+        
 
 GravelGenerator()
