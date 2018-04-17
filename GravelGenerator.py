@@ -5,7 +5,7 @@ class GravelGenerator():
     '''
         Description : Generate gravels randomly on selected object
         Things to do
-            1. funtion : get_gravel_file, get_gravel_script, scatter_gravel_map, reset
+            1. Add funtion : get_gravel_file, get_gravel_script, scatter_gravel_map, reset
             2. layout
     ''' 
     
