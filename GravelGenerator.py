@@ -114,11 +114,14 @@ class GravelGenerator():
             
             x = random.uniform(-10.0, 10.0)
             z = random.uniform(-10.0, 10.0)
+
+            # randomsize = random.random()*global_size
             
             mycube = cmds.polyCube(h=3, w=3, d=3, n="randPolyCube#")
             cmds.move(x, 0.0, z, mycube)    # obj in 
             cmds.rotate(random.random()*1000, random.random()*1000, random.random()*1000, mycube)
-            
+            # cmds.scale(randomsize, mycube)
+
             cmds.parent(mycube, gravelGrp)
         
         cmds.select(gravelGrp, replace=True)
@@ -127,9 +130,47 @@ class GravelGenerator():
     def scatter_gravel_map(self, args):
         # Scatter gravels on map
         print("scatter_gravel_map")
+
+        self.selectedObjs = cmds.ls(selection=True)
+
+        # Exception when not selecting polygon
+        for i in range(0, len(selectedObjs)):
+            
+            self.obj = self.selectedObjs[i]
+
+            shapeNode = cmds.listRelatives(self.obj, shapes=True)
+            nodeType = cmds.nodeType(shapeNode)
+
+            if (self.obj != ""):
+                error('Please select polygon!')
+
+        # Get vertex of the recognize_map   # For 1 polygon
+        shapeNode = cmds.listRelatives(self.obj, shapes=True)
+        numVerts = cmds.polyEvaluate(self.obj, vertex=True)
+
+        # 0 ~ numVerts 중 random으로 amount만큼 선택, 새로운 리스트로 저장 
+        self.random_list = ''
+#        self.random_vert_num = ''
+
+        for i in range(0, self.amount):
+            self.random_list.append() = random.randint(0, numVerts)
+
+#        for i in range(0, len(random_vert_num)):
+#            self.random_list.append()
+
+        randAmt = [0, 0, 0]
+        for i in range(0, len(random_list)):
+            # 선택된 오브젝트의 random vertex리스트의 i번 선택
+            vertexStr = "{0}.vtx[{1}]".format(self.obj, i)
+            cmds.select(vertexStr, replace=True)
+
+            # i번째 vertex에 생성한 자갈 배치
+            # random_list = 
+
+            # cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
-        # Get vertex of the map
-        
+        #cmds.select(self.obj, replace=True)        # finish up
+
         
     def reset(self, args):
         # Reset the values set by a user
