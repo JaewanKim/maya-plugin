@@ -44,8 +44,8 @@ class GravelGenerator():
         
         self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, field=True)
         self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=1, max=3, field=True)
-        self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1, max=3, field=True)
-        self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=1, max=3, field=True)
+        self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1.0, max=3.0, field=True)
+        self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=0.1, max=1.0, field=True)
         
         cmds.columnLayout(adjustableColumn=True)
         
@@ -68,6 +68,9 @@ class GravelGenerator():
         self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
         self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
         
+        if (self.max_size < self.min_size):
+            error("Please input min_size lower than max_size")
+
         if (self.radio == 1):    # File
             self.get_gravel_file(self)
         
@@ -110,7 +113,16 @@ class GravelGenerator():
         
         self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)    # Will be deleted
         print(self.global_size)
+
+        self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
+        print(self.max_size)
         
+        self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
+        print(self.min_size)
+
+        if (self.max_size < self.min_size):
+            cmds.error("Please input min_size lower than max_size")
+
         gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
         
         for i in range(0, self.amount):    # for obj in objlist: from get_gravel_~
@@ -118,7 +130,7 @@ class GravelGenerator():
             x = random.uniform(-10.0, 10.0)
             z = random.uniform(-10.0, 10.0)
             
-            randomsize = random.random()*self.global_size
+            randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
             
             mycube = cmds.polyCube(h=1, w=1, d=1, n="randPolyCube#")
             cmds.scale(randomsize, randomsize, randomsize, mycube)
