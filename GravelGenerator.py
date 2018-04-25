@@ -43,7 +43,7 @@ class GravelGenerator():
         cmds.setParent("..")
         
         self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, field=True)
-        self.global_size_str = cmds.intSliderGrp(l="Global Size", min=1, max=3, field=True)
+        self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=1, max=3, field=True)
         self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1, max=3, field=True)
         self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=1, max=3, field=True)
         
@@ -64,7 +64,7 @@ class GravelGenerator():
         self.radio = cmds.radioButtonGrp(self.radio_str, query=True, select=True)
         
         self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)
-        self.global_size = cmds.intSliderGrp(self.global_size_str, query=True, value=True)
+        self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)
         self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
         self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
         
@@ -108,25 +108,28 @@ class GravelGenerator():
         self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)    # Will be deleted
         print(self.amount)
         
+        self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)    # Will be deleted
+        print(self.global_size)
+        
         gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
         
-        for i in range(0, self.amount):    # for obj in objlist:
-            
+        for i in range(0, self.amount):    # for obj in objlist: from get_gravel_~
+
             x = random.uniform(-10.0, 10.0)
             z = random.uniform(-10.0, 10.0)
-
-            # randomsize = random.random()*global_size
             
-            mycube = cmds.polyCube(h=3, w=3, d=3, n="randPolyCube#")
-            cmds.move(x, 0.0, z, mycube)    # obj in 
-            cmds.rotate(random.random()*1000, random.random()*1000, random.random()*1000, mycube)
-            # cmds.scale(randomsize, mycube)
-
+            randomsize = random.random()*self.global_size
+            
+            mycube = cmds.polyCube(h=1, w=1, d=1, n="randPolyCube#")
+            cmds.scale(randomsize, randomsize, randomsize, mycube)
+            cmds.move(x, randomsize/2, z, mycube)    # obj in 
+            cmds.move(x, 0, z, ".scalePivot", ".rotatePivot", absolute=True)
+            cmds.rotate(0, random.uniform(-45.0, 45.0), 0, mycube)
             cmds.parent(mycube, gravelGrp)
-        
+            
         cmds.select(gravelGrp, replace=True)
-        
-        
+
+
     def scatter_gravel_map(self, args):
         # Scatter gravels on map
         print("scatter_gravel_map")
@@ -145,31 +148,40 @@ class GravelGenerator():
                 error('Please select polygon!')
 
         # Get vertex of the recognize_map   # For 1 polygon
-        shapeNode = cmds.listRelatives(self.obj, shapes=True)
-        numVerts = cmds.polyEvaluate(self.obj, vertex=True)
+        for i in range(0, len(self.selectedObjs)):
+            
+            self.obj = self.selectedObjs[i]
+            
+            shapeNode = cmds.listRelatives(self.obj, shapes=True)
+            nodeType = cmds.nodeType(shapeNode)
 
-        # 0 ~ numVerts 중 random으로 amount만큼 선택, 새로운 리스트로 저장 
-        self.random_list = ''
-#        self.random_vert_num = ''
 
-        for i in range(0, self.amount):
-            self.random_list.append() = random.randint(0, numVerts)
+            # 0 ~ numVerts 중 amount만큼 random하게 선택, 새로운 리스트로 저장 
+            self.random_list = ''
+    #        self.random_vert_num = ''
 
-#        for i in range(0, len(random_vert_num)):
-#            self.random_list.append()
+            for j in range(0, self.amount):
+                self.random_list.append() = random.randint(0, numVerts)
 
-        randAmt = [0, 0, 0]
-        for i in range(0, len(random_list)):
-            # 선택된 오브젝트의 random vertex리스트의 i번 선택
-            vertexStr = "{0}.vtx[{1}]".format(self.obj, i)
-            cmds.select(vertexStr, replace=True)
+    #        for i in range(0, len(random_vert_num)):
+    #            self.random_list.append()
 
-            # i번째 vertex에 생성한 자갈 배치
-            # random_list = 
+            randAmt = [0, 0, 0]
+            for j in range(0, len(random_list)):    # len(random_list) == self.amount
+                # 선택된 오브젝트의 random vertex리스트의 i번 선택
+                vertexStr = "{0}.vtx[{1}]".format(self.obj, i)  # obj.vtx[i]
 
-            # cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
-        
-        #cmds.select(self.obj, replace=True)        # finish up
+                for k in range(0, i):
+                    randAmt[j] = 
+
+                cmds.select(vertexStr, replace=True)
+
+                # i번째 vertex에 생성한 자갈 배치
+                # random_list = 
+
+                # cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
+            
+            #cmds.select(self.obj, replace=True)        # finish up
 
         
     def reset(self, args):
