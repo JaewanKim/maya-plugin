@@ -5,8 +5,9 @@ class GravelGenerator():
     '''
         Description : Generate gravels randomly on selected object
         Things to do
-            1. Add funtion : get_gravel_file, get_gravel_script, scatter_gravel_map, reset
+            1. Add funtion : get_gravel_script, reset
             2. layout
+            3. refactoring
     ''' 
     
     def __init__(self):
@@ -32,9 +33,11 @@ class GravelGenerator():
         self.randVerts = []
         self.numVerts = 0
         self.vertex_str_list = []
-        
+        self.normal = []
+
         self.randVerts_pos = 0
         self.randVerts_pos_list = []
+
         # Window
         if (cmds.window("gravel generator", exists=True)):
             cmds.deleteUI("gravel generator")
@@ -97,6 +100,16 @@ class GravelGenerator():
         # Generate gravels by script
         print("get_gravel_script")
         
+        self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)
+        self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)
+        self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
+        self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
+        
+        gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
+        
+        
+        
+        cmds.select(gravelGrp, replace=True)        # finish up
         
     def recognize_map(self, args):
         # Recognize the selected object as a map
@@ -116,16 +129,9 @@ class GravelGenerator():
         # Scatter gravels on grid
         
         self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)    # Will be deleted
-        print(self.amount)
-        
         self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)    # Will be deleted
-        print(self.global_size)
-        
         self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
-        print(self.max_size)
-        
         self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
-        print(self.min_size)
         
         if (self.max_size < self.min_size):
             cmds.error("Please input min_size lower than max_size")
@@ -148,12 +154,15 @@ class GravelGenerator():
             
         cmds.select(gravelGrp, replace=True)
         
-    
+        
     def scatter_gravel_map(self, args):
         # Scatter gravels on map
         print("scatter_gravel_map")
 
         self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)    # Will be deleted
+        self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)    # Will be deleted
+        self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
+        self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
         
         self.selectedObjs = cmds.ls(selection=True)
         
@@ -168,7 +177,7 @@ class GravelGenerator():
             if (nodeType != "mesh"):
                 cmds.error('Please select polygon!')
         
-        # 
+        # Loop all maps
         for n in range(0, len(self.selectedObjs)):
             print("selectedObjs[", n, "]")
             
@@ -177,42 +186,41 @@ class GravelGenerator():
             shapeNode = cmds.listRelatives(self.obj, shapes=True)
             nodeType = cmds.nodeType(shapeNode)
             
-            # 0 ~ numVerts 중 amount만큼 random하게 선택
             self.randVerts = []
             self.numVerts = cmds.polyEvaluate(self.obj, vertex=True)
             
-            # 새로운 리스트(randVerts)로 저장 후,
+            # Select vertex randomly as many as amount and Save it to ranVerts list
             for j in range(0, self.amount):
                 self.randVerts.append(random.randint(0, self.numVerts))
-            print self.randVerts
             
-            # 선택 오브젝트의 vertex를 string으로 조합, 위치 저장
+            # Combine the vertex of selected object to string
             for k in self.randVerts:
                 self.vertex_str_list.append("{0}.vtx[{1}]".format(self.obj, k))
-            print self.vertex_str_list
             
-            
-            gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
+            # Save position of the vertex selected randomly
             vertPos = [0, 0, 0]
-            # 랜덤하게 고른 vertex들의 위치를 저장
+            gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
+
             for r in self.vertex_str_list:
+
                 self.randVerts_pos = cmds.xform(r, q=True, ws=True, t=True)
-                
+
                 for j in range(0, 3):
                     vertPos[j] = self.randVerts_pos[j]
                 
-                # 임시 큐브 생성 및 배치
+                # Get the normal vector on selected vertex
+                self.normal = cmds.polyNormalPerVertex(r, query=True, xyz=True)[:3]
+                
+                # Create and Arrange the temporary cube.  # It will be changed to gravel
                 randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
-                map_ypos = cmds.xform(self.selectedObjs[n], q=True, ws=True, t=True)[1]
                 
-                mycube = cmds.polyCube(h=1, w=1, d=1, n="randPolyCube#")
-                # cmds.scale(randomsize, randomsize, randomsize, mycube)
-                cmds.move(vertPos[0], map_ypos+vertPos[1]+randomsize/2, vertPos[2], mycube)    # obj in 
-                cmds.move(vertPos[0], map_ypos, vertPos[2], ".scalePivot", ".rotatePivot", absolute=True)
+                mycube = cmds.polyCube(axis=self.normal, h=1, w=1, d=1, n="randPolyCube#")
+                cmds.scale(randomsize, randomsize, randomsize, mycube)
+                cmds.move(vertPos[0], vertPos[1]+randomsize/2, vertPos[2], mycube)    # obj in 
+                cmds.move(vertPos[0], vertPos[1], vertPos[2], ".scalePivot", ".rotatePivot", absolute=True)
                 cmds.rotate(0, random.uniform(-45.0, 45.0), 0, mycube)
+
                 cmds.parent(mycube, gravelGrp)
-                
-            print self.randVerts_pos_list
     
     
     def reset(self, args):
