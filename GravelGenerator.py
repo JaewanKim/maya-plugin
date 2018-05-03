@@ -111,6 +111,7 @@ class GravelGenerator():
         
         cmds.select(gravelGrp, replace=True)        # finish up
         
+        
     def recognize_map(self, args):
         # Recognize the selected object as a map
         print("recognize_map")
@@ -179,15 +180,19 @@ class GravelGenerator():
         
         # Loop all maps
         for n in range(0, len(self.selectedObjs)):
-            print("selectedObjs[", n, "]")
             
-            self.obj = self.selectedObjs[i]
+            print("selectedObjs[", n, "]")
+            print(self.obj)
+            
+            self.obj = self.selectedObjs[n]
             
             shapeNode = cmds.listRelatives(self.obj, shapes=True)
             nodeType = cmds.nodeType(shapeNode)
             
+            # Initialize random vertex list and vertex number 
             self.randVerts = []
             self.numVerts = cmds.polyEvaluate(self.obj, vertex=True)
+            self.vertex_str_list = []
             
             # Select vertex randomly as many as amount and Save it to ranVerts list
             for j in range(0, self.amount):
@@ -199,7 +204,7 @@ class GravelGenerator():
             
             # Save position of the vertex selected randomly
             vertPos = [0, 0, 0]
-            gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
+            gravelGrp = cmds.group(empty=True, name="Gravel_Grp#")
 
             for r in self.vertex_str_list:
 
@@ -221,6 +226,8 @@ class GravelGenerator():
                 cmds.rotate(0, random.uniform(-45.0, 45.0), 0, mycube)
 
                 cmds.parent(mycube, gravelGrp)
+            
+            cmds.select(gravelGrp, replace=True)
     
     
     def reset(self, args):
