@@ -107,7 +107,37 @@ class GravelGenerator():
         
         gravelGrp = cmds.group(empty=True, name="Gravel_Grp")
         
-        
+        for amount in range(0, self.amount):
+            
+            # Create nurbs sphere
+            mysphere = cmds.sphere(r=1, n="randGravel#")
+            cmds.scale(random.uniform(0.6,1.0), random.uniform(0.2,0.5), 1, mysphere)
+            
+            # Add noise for nurbsSurface
+            shapeNode = cmds.listRelatives(mysphere, shapes=True)
+            
+            degU = cmds.getAttr('randGravel' + str(amount+1) + '.degreeU')
+            spansU = cmds.getAttr('randGravel' + str(amount+1) + '.spansU')
+            cvsU = degU + spansU
+            
+            degV = cmds.getAttr('randGravel' + str(amount+1) + '.degreeV')
+            spansV = cmds.getAttr('randGravel' + str(amount+1) + '.spansV')
+            cvsV = degV + spansV
+            
+            noiseAmt = 0.1
+            randAmt = [0, 0, 0]
+            
+            for i in range(1, cvsU-1):
+                
+                for j in range(0, cvsV):
+                    
+                    for k in range(0, 3):
+                        randAmt[k] = random.random() * (noiseAmt*2) - noiseAmt
+                    
+                    vertexStr = "{0}.cv[{1}][{2}]".format('randGravel'+str(amount+1), i, j)
+
+                    cmds.select(vertexStr, replace=True)
+                    cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
         cmds.select(gravelGrp, replace=True)        # finish up
         
@@ -189,7 +219,7 @@ class GravelGenerator():
             shapeNode = cmds.listRelatives(self.obj, shapes=True)
             nodeType = cmds.nodeType(shapeNode)
             
-            # Initialize random vertex list and vertex number 
+            # Initialize what 
             self.randVerts = []
             self.numVerts = cmds.polyEvaluate(self.obj, vertex=True)
             self.vertex_str_list = []
