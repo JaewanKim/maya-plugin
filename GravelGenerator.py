@@ -45,25 +45,16 @@ class GravelGenerator():
         self.win = cmds.window("gravel generator", title="Gravel Generator", widthHeight=(500, 300))
         
         cmds.columnLayout(adjustableColumn=True)
-        cmds.rowLayout(numberOfColumns=3)
-        
-        self.radio_str = cmds.radioButtonGrp(label="Generate Type", labelArray2=['File', 'Script'], numberOfRadioButtons=2, select=1)
-        
-        cmds.setParent("..")
-        
+
         self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, field=True)
         self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=1, max=3, field=True)
         self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1.0, max=3.0, field=True)
         self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=0.1, max=1.0, field=True)
         
-        cmds.columnLayout(adjustableColumn=True)
-        
-        cmds.setParent("..")
         cmds.button(label="Generate Gravels", command=self.get_values)
         cmds.button(label="Reset", )
         cmds.button(label="Test for scatter on grid", command=self.scatter_gravel_grid)
         cmds.button(label="Test for scatter on map", command=self.scatter_gravel_map)
-        cmds.button(label="Test to get gravel file", command=self.get_gravel_file)
         cmds.button(label="Test to get gravel script", command=self.get_gravel_script)
         
         cmds.setParent("..")
@@ -88,12 +79,6 @@ class GravelGenerator():
         
         elif (self.radio == 2):  # Script
             self.get_gravel_script(self)
-        
-        
-    def get_gravel_file(self, args):
-        # Get the files of gravel, size it randomly
-        # I/O File obj, poly, 
-        print("get_gravel_file")
         
         
     def get_gravel_script(self, args):
