@@ -48,10 +48,10 @@ class GravelGenerator():
         
         cmds.columnLayout(adjustableColumn=True)
         
-        self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, field=True)
-        self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=1, max=3, field=True)
-        self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1.0, max=3.0, field=True)
-        self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=0.1, max=1.0, field=True)
+        self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, value=10, field=True)
+        self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=0.1, max=2.0, value=1, field=True)
+        self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1.0, max=3.0, value=2.0, field=True)
+        self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=0.1, max=1.0, value=0.5, field=True)
         
         cmds.button(label="Generate Gravels", command=self.get_values)
         cmds.button(label="Reset", )
