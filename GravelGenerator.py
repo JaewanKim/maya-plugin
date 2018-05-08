@@ -6,8 +6,7 @@ class GravelGenerator():
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
             1. Debug - normal axis error
-            2. def reset()
-            4. refactoring/layout
+            2. refactoring/layout
     ''' 
     
     def __init__(self):
@@ -48,15 +47,12 @@ class GravelGenerator():
         cmds.columnLayout(adjustableColumn=True)
         
         self.amount_str = cmds.intSliderGrp(l="Amount", min=1, max=100, value=1, field=True)
-        self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=0.5, max=2.0, value=0.5, field=True)
+        self.global_size_str = cmds.floatSliderGrp(l="Global Size", min=1.0, max=2.0, value=1.0, field=True)
         self.max_size_str = cmds.floatSliderGrp(l="Max Size", min=1.5, max=2.0, value=1.5, field=True)
         self.min_size_str = cmds.floatSliderGrp(l="Min Size", min=1.0, max=1.5, value=1.0, field=True)
         
         cmds.button(label="Generate Gravels", command=self.get_values)
-        cmds.button(label="Reset", )
-        cmds.button(label="Test for scatter on grid", command=self.scatter_grid)
-        cmds.button(label="Test for scatter on map", command=self.scatter_map)
-        cmds.button(label="Test to get gravel script", command=self.get_gravel)
+        cmds.button(label="Reset", command=self.reset)
         
         cmds.setParent("..")
         cmds.showWindow(self.win)
@@ -200,7 +196,7 @@ class GravelGenerator():
                 # Get the normal vector on selected vertex
                 self.normal = cmds.polyNormalPerVertex(r, query=True, xyz=True)[:3]
                 
-                # Create and Arrange the gravels
+                # Create and Arrange the gravels.
                 randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
                 
                 gravel = self.get_gravel(self)
@@ -216,8 +212,12 @@ class GravelGenerator():
         
         
     def reset(self, args):
-        # Reset the values set by a user
-        print("reset")
+        # Reset the values by default
+        
+        cmds.intSliderGrp(self.amount_str, edit=True, value=True)
+        cmds.floatSliderGrp(self.global_size_str, edit=True, value=True)
+        cmds.floatSliderGrp(self.max_size_str, edit=True, value=True)
+        cmds.floatSliderGrp(self.min_size_str, edit=True, value=True)
 
 
 GravelGenerator()
