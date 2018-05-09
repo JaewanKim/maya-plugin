@@ -1,5 +1,0 @@
-global proc melToPython()
-{
-    python "import pythonFromMel";
-    python "pythonFromMel.makeCurve()"
-}
