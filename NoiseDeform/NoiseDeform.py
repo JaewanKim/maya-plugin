@@ -3,7 +3,7 @@ import random
 
 class NoiseDeformer():
     '''
-        Description : Add noise deformation to the last selected object(polygon, nurbsSurface)
+        Description : Add noise deformation to selected object(polygon, nurbsSurface)
         Things to change : Arrange the layout
     '''
     
