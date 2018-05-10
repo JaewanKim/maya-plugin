@@ -1,5 +1,4 @@
 import maya.cmds as cmds
-from functools import partial
 import random
 
 class GravelGenerator():
@@ -7,7 +6,7 @@ class GravelGenerator():
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
             1. gravels on hill
-            2. gravels shape
+            2. gravels shpae
     ''' 
     
     def __init__(self):
@@ -52,7 +51,7 @@ class GravelGenerator():
         cmds.setParent("..")
         
         # Slider Group
-        cmds.columnLayout(h=240)
+        cmds.columnLayout(h=200)
         cmds.separator(h=5, style='single', hr=True)
         
         self.amount_str = cmds.intSliderGrp(l="Amount:", min=1, max=100, value=1, field=True)

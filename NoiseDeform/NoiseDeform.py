@@ -20,15 +20,72 @@ class NoiseDeformer():
             cmds.deleteUI("noise")
         
         # UI Component
-        self.win = cmds.window("noise", title="Set Noise", widthHeight=(400, 100))
-        cmds.columnLayout()
-        cmds.rowLayout(numberOfColumns=2)
+        if (cmds.window("noise", exists=True)):
+            cmds.deleteUI("noise", window=True)
+            
+        self.win = cmds.window("noise", title="Set Noise", sizeable=False, menuBar=True)
         
-        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=2, field=True)
-        cmds.button(label="Add Noise", command=self.classify_object)
+        # Menu Bar
+        fileMenu = cmds.menu(label="Edit")
+        saveOption = cmds.menuItem(label="Save Settings", enable=False)
+        resetOption = cmds.menuItem(label="Reset Settings", command=self.reset)
         
+        helpMenu = cmds.menu(label="Help")
+        helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
         cmds.setParent("..")
+        
+        cmds.columnLayout(h=200)
+        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=2, field=True)
+        cmds.setParent("..")
+        
+        
+        cmds.columnLayout(h=40)
+        cmds.separator(h=5, style='single', hr=True)
+        cmds.setParent("..")
+        
+        cmds.rowColumnLayout(numberOfColumns=7, columnWidth=[(1,5),(2,164),(3,4),(4,164),(5,4),(6,164),(7,5)])
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Apply and Close", h=27, command=self.classify_object_close)
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Apply", h=27, command=self.classify_object)
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Close", h=27, command=self.close)
+        cmds.separator(h=10, style='none')
+        cmds.setParent("..")
+        
         cmds.showWindow(self.win)
+        
+        
+    def classify_object_close(self, args):
+        
+        # Exception to prevent when nothing is selected
+        self.selectedObjs = cmds.ls(selection=True)
+        
+        if (len(self.selectedObjs) < 1):
+            cmds.error("Please select object at least one!")
+        
+        # Get noise amount from slider group
+        self.amount = cmds.floatSliderGrp(self.amount_str, query=True, value=True)
+        
+        for i in range(0, len(self.selectedObjs)):
+            
+            self.obj = self.selectedObjs[i]
+            
+            shapeNode = cmds.listRelatives(self.obj, shapes=True)
+            nodeType = cmds.nodeType(shapeNode)
+            
+            # Classify object nodeType and Call method
+            if (nodeType == "mesh"):
+                self.noise_poly(self)
+                
+            elif (nodeType == "nurbsSurface" ):
+                self.noise_nurbsSurface(self)
+                
+            else:
+                cmds.error("Please select mesh or nurbsSurface!")
+        
+        if cmds.window(self.win, exists=True): 
+            cmds.deleteUI(self.win, window=True)
         
         
     def classify_object(self, args):
@@ -58,8 +115,8 @@ class NoiseDeformer():
                 
             else:
                 cmds.error("Please select mesh or nurbsSurface!")
-    
-    
+        
+        
     def noise_poly(self, args):
         # Add noise for polygon
         
@@ -78,8 +135,8 @@ class NoiseDeformer():
             cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
         cmds.select(self.obj, replace=True)        # finish up
-    
-    
+        
+        
     def noise_nurbsSurface(self, args):
         # Add noise for nurbsSurface
         
@@ -108,6 +165,21 @@ class NoiseDeformer():
                 cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
         cmds.select(self.obj, replace=True)
+        
+        
+    def reset(self, args):
+        # Reset the values by default
+        cmds.floatSliderGrp(self.amount_str, edit=True, value=True)
+        
+        
+    def showHelp(self, args):
+        cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
+        
+        
+    def close(self, args):
+        # Close the window
+        if cmds.window(self.win, exists=True): 
+            cmds.deleteUI(self.win, window=True)
 
 
 NoiseDeformer()
