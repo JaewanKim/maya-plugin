@@ -6,7 +6,6 @@ class NoiseDeformer():
         Description : Add noise deformation to selected object(polygon, nurbsSurface)
         Things to do :
             1. Refactoring
-            2. Arrange the layout
     '''
     
     def __init__(self):
@@ -34,15 +33,16 @@ class NoiseDeformer():
         helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
         cmds.setParent("..")
         
+        # Slider Group
         cmds.columnLayout(h=200)
         self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=2, field=True)
         cmds.setParent("..")
-        
         
         cmds.columnLayout(h=40)
         cmds.separator(h=5, style='single', hr=True)
         cmds.setParent("..")
         
+        # Button Layout
         cmds.rowColumnLayout(numberOfColumns=7, columnWidth=[(1,5),(2,164),(3,4),(4,164),(5,4),(6,164),(7,5)])
         cmds.separator(h=10, style='none')
         cmds.button(label="Apply and Close", h=27, command=self.classify_object_close)
