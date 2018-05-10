@@ -6,6 +6,7 @@ class NoiseDeformer():
         Description : Add noise deformation to selected object(polygon, nurbsSurface)
         Things to do :
             1. Refactoring
+            2. Arrange the layout
     '''
     
     def __init__(self):
@@ -22,7 +23,7 @@ class NoiseDeformer():
         if (cmds.window("noise", exists=True)):
             cmds.deleteUI("noise", window=True)
             
-        self.win = cmds.window("noise", title="Set Noise", sizeable=False, menuBar=True)
+        self.win = cmds.window("noise", title="Noise Deformer", sizeable=False, menuBar=True)
         
         # Menu Bar
         fileMenu = cmds.menu(label="Edit")
@@ -30,19 +31,18 @@ class NoiseDeformer():
         resetOption = cmds.menuItem(label="Reset Settings", command=self.reset)
         
         helpMenu = cmds.menu(label="Help")
-        helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
+        helpOption = cmds.menuItem(label="Help on Noise Deformer", command=self.showHelp)
         cmds.setParent("..")
         
-        # Slider Group
         cmds.columnLayout(h=200)
-        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0, max=2, field=True)
+        self.amount_str = cmds.floatSliderGrp(l="Amount", min=0.1, max=2.0, value=0.1, field=True)
         cmds.setParent("..")
+        
         
         cmds.columnLayout(h=40)
         cmds.separator(h=5, style='single', hr=True)
         cmds.setParent("..")
         
-        # Button Layout
         cmds.rowColumnLayout(numberOfColumns=7, columnWidth=[(1,5),(2,164),(3,4),(4,164),(5,4),(6,164),(7,5)])
         cmds.separator(h=10, style='none')
         cmds.button(label="Apply and Close", h=27, command=self.classify_object_close)
@@ -169,7 +169,7 @@ class NoiseDeformer():
         
     def reset(self, args):
         # Reset the values by default
-        cmds.floatSliderGrp(self.amount_str, edit=True, value=True)
+        cmds.floatSliderGrp(self.amount_str, edit=True, value=0.1)
         
         
     def showHelp(self, args):
