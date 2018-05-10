@@ -7,7 +7,7 @@ class GravelGenerator():
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
             1. gravels on hill
-            2. gravels shpae
+            2. gravels shape
     ''' 
     
     def __init__(self):
