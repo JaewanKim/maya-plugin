@@ -5,7 +5,7 @@ class NoiseDeformer():
     '''
         Description : Add noise deformation to selected object(polygon, nurbsSurface)
         Things to do :
-            1. Exception for not selecting poly or nurbs
+            1. Refactoring
             2. Arrange the layout
     '''
     
@@ -42,7 +42,6 @@ class NoiseDeformer():
         # Get noise amount from slider group
         self.amount = cmds.floatSliderGrp(self.amount_str, query=True, value=True)
         
-        
         for i in range(0, len(self.selectedObjs)):
             
             self.obj = self.selectedObjs[i]
@@ -56,6 +55,9 @@ class NoiseDeformer():
                 
             elif (nodeType == "nurbsSurface" ):
                 self.noise_nurbsSurface(self)
+                
+            else:
+                cmds.error("Please select mesh or nurbsSurface!")
     
     
     def noise_poly(self, args):
@@ -105,6 +107,7 @@ class NoiseDeformer():
                 cmds.select(vertexStr, replace=True)
                 cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
-        cmds.select(self.obj, replace=True)        # finish up
+        cmds.select(self.obj, replace=True)
+
 
 NoiseDeformer()
