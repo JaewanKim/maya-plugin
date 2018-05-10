@@ -250,12 +250,12 @@ class GravelGenerator():
         cmds.floatSliderGrp(self.global_size_str, edit=True, value=True)
         cmds.floatSliderGrp(self.max_size_str, edit=True, value=True)
         cmds.floatSliderGrp(self.min_size_str, edit=True, value=True)
-    
-    
+        
+        
     def showHelp(self, args):
         cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
-    
-    
+        
+        
     def close(self, args):
         # Close the window
         if cmds.window(self.win, exists=True): 
