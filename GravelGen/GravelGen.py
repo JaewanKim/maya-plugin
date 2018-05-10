@@ -1,18 +1,16 @@
 import maya.cmds as cmds
+from functools import partial
 import random
 
 class GravelGenerator():
     '''
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
-            1. refactoring
-            2. layout
+            1. gravels on hill
+            2. gravels shpae
     ''' 
     
     def __init__(self):
-        
-        self.radio = 0
-        self.radio_str = ''
         
         self.amount = 0
         self.amount_str = ''
@@ -40,35 +38,57 @@ class GravelGenerator():
         
         # Window
         if (cmds.window("gravel generator", exists=True)):
-            cmds.deleteUI("gravel generator")
+            cmds.deleteUI("gravel generator", window=True)
         
         self.win = cmds.window("gravel generator", title="Gravel Generator", sizeable=False, resizeToFitChildren=True, menuBar=True)
         
-        mainform = cmds.formLayout(width=300)
-        maincol = cmds.columnLayout(adj=True)
-        
-        # Menu Definition
+        # Menu Bar
         fileMenu = cmds.menu(label="Edit")
         saveOption = cmds.menuItem(label="Save Settings", enable=False)
         resetOption = cmds.menuItem(label="Reset Settings", command=self.reset)
-        cmds.setParent("..")
         
         helpMenu = cmds.menu(label="Help")
         helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
+        cmds.setParent("..")
         
-        cmds.columnLayout(adjustableColumn=True)
-        cmds.separator(h=5, style='none')
+        # Slider Group
+        cmds.columnLayout(h=240)
+        cmds.separator(h=5, style='single', hr=True)
         
         self.amount_str = cmds.intSliderGrp(l="Amount:", min=1, max=100, value=1, field=True)
         self.global_size_str = cmds.floatSliderGrp(l="Global Size:", min=1.0, max=2.0, value=1.0, field=True)
         self.max_size_str = cmds.floatSliderGrp(l="Max Size:", min=1.5, max=2.0, value=1.5, field=True)
         self.min_size_str = cmds.floatSliderGrp(l="Min Size:", min=1.0, max=1.5, value=1.0, field=True)
-        
-        cmds.separator(h=15, style='none')
-        cmds.button(label="Generate Gravels", h=30, command=self.get_values)
-        
         cmds.setParent("..")
+        
+        cmds.columnLayout(h=40)
+        cmds.separator(h=5, style='single', hr=True)
+        cmds.setParent("..")
+        
+        # Button Layout
+        cmds.rowColumnLayout(numberOfColumns=7, columnWidth=[(1,5),(2,164),(3,4),(4,164),(5,4),(6,164),(7,5)])
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Apply and Close", h=27, command=self.get_values_close)
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Apply", h=27, command=self.get_values)
+        cmds.separator(h=10, style='none')
+        cmds.button(label="Close", h=27, command=self.close)
+        cmds.separator(h=10, style='none')
+        cmds.setParent("..")
+        
         cmds.showWindow(self.win)
+        
+        
+    def get_values_close(self, args):
+        # Get values of UI Component and Close the window
+        
+        self.amount = cmds.intSliderGrp(self.amount_str, query=True, value=True)
+        self.global_size = cmds.floatSliderGrp(self.global_size_str, query=True, value=True)
+        self.max_size = cmds.floatSliderGrp(self.max_size_str, query=True, value=True)
+        self.min_size = cmds.floatSliderGrp(self.min_size_str, query=True, value=True)
+        
+        self.recognize_map(self)
+        self.close(self)
         
         
     def get_values(self, args):
@@ -235,6 +255,12 @@ class GravelGenerator():
     
     def showHelp(self, args):
         cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
+    
+    
+    def close(self, args):
+        # Close the window
+        if cmds.window(self.win, exists=True): 
+            cmds.deleteUI(self.win, window=True)
 
 
 GravelGenerator()
