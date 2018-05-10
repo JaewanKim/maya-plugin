@@ -4,7 +4,9 @@ import random
 class NoiseDeformer():
     '''
         Description : Add noise deformation to selected object(polygon, nurbsSurface)
-        Things to change : Arrange the layout
+        Things to do :
+            1. Exception for not selecting poly or nurbs
+            2. Arrange the layout
     '''
     
     def __init__(self):
