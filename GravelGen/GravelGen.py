@@ -173,9 +173,9 @@ class GravelGenerator():
             randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
             
             gravel = self.get_gravel(self)
-            temp = random.uniform(0.2,0.5)
+            temp = random.uniform(0.2,0.4)
             
-            cmds.scale(random.uniform(0.6,1.0)*randomsize, temp*randomsize, randomsize, gravel)
+            cmds.scale(random.uniform(0.7,0.9)*randomsize, temp*randomsize, randomsize, gravel)
             cmds.move(x, temp*randomsize/2, z, gravel)
             cmds.move(x, 0, z, ".scalePivot", ".rotatePivot", absolute=True)
             cmds.rotate(0, random.uniform(-45.0, 45.0), 0, gravel)
@@ -232,8 +232,8 @@ class GravelGenerator():
                 randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
                 
                 gravel = self.get_gravel(self)
-                temp = random.uniform(0.2,0.5)
-                cmds.scale(random.uniform(0.6,1.0)*randomsize, temp*randomsize, randomsize, gravel)
+                temp = random.uniform(0.2,0.4)
+                cmds.scale(random.uniform(0.7,0.9)*randomsize, temp*randomsize, randomsize, gravel)
                 cmds.move(vertPos[0], vertPos[1]+temp*randomsize/2, vertPos[2], gravel)
                 cmds.move(vertPos[0], vertPos[1], vertPos[2], ".scalePivot", ".rotatePivot", absolute=True)
                 cmds.rotate(0, random.uniform(-45.0, 45.0), 0, gravel)
