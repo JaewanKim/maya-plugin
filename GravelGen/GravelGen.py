@@ -6,7 +6,7 @@ class GravelGenerator():
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
             1. gravels on hill
-            2. gravels shape
+            2. delete gravel 1 ==> cannot find randGravel1.degree
     ''' 
     
     def __init__(self):
@@ -130,7 +130,7 @@ class GravelGenerator():
         
         # Create nurbs sphere and Add noise for nurbsSurface
         gravel = cmds.sphere(axis=self.normal, r=1, n="randGravel#")[0]
-
+        
         shapeNode = cmds.listRelatives(gravel, shapes=True)
         
         degU = cmds.getAttr('randGravel' + str(self.amount_idx+1) + '.degreeU')
@@ -141,10 +141,10 @@ class GravelGenerator():
         spansV = cmds.getAttr('randGravel' + str(self.amount_idx+1) + '.spansV')
         cvsV = degV + spansV
         
-        noiseAmt = 0.05
+        noiseAmt = 0.1
         randAmt = [0, 0, 0]
         
-        for i in range(1, cvsU-1):
+        for i in range(2, cvsU-2):
             
             for j in range(0, cvsV):
                 
