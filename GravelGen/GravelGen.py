@@ -1,11 +1,14 @@
 import maya.cmds as cmds
 import random
+import maya.mel as mel
 
 class GravelGenerator():
     '''
         Description : Generate gravels randomly on grid or selected polygon map
         Things to do
             1. gravels on hill
+                - # ?. Solution for rotate pivot || How to have initial axis with pivot.
+                - # NOT perfectly arranged on steep slope
             2. delete gravel 1 ==> cannot find randGravel1.degree
     ''' 
     
@@ -30,7 +33,9 @@ class GravelGenerator():
         self.randVerts = []
         self.numVerts = 0
         self.vertex_str_list = []
-        self.normal = [0, 0, 0]
+        self.normal = (0.0, 1.0, 0.0)
+        
+        self.randomsize = 1    # don't need to self.variable
         
         self.randVerts_pos = 0
         self.randVerts_pos_list = []
@@ -129,7 +134,8 @@ class GravelGenerator():
         # Generate gravels by script
         
         # Create nurbs sphere and Add noise for nurbsSurface
-        gravel = cmds.sphere(axis=self.normal, r=1, n="randGravel#")[0]
+        gravel = cmds.sphere(axis=[0.0, 1.0, 0.0], n="randGravel#")[0]
+        #gravel = cmds.sphere(axis=self.normal, n="randGravel#")[0]
         
         shapeNode = cmds.listRelatives(gravel, shapes=True)
         
@@ -157,6 +163,7 @@ class GravelGenerator():
                 cmds.move(randAmt[0], randAmt[1], randAmt[2], relative=True)
         
         cmds.select(gravel, replace=True)
+        
         return gravel
         
         
@@ -170,13 +177,13 @@ class GravelGenerator():
             x = random.uniform(-10.0, 10.0)
             z = random.uniform(-10.0, 10.0)
             
-            randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
+            self.randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
             
             gravel = self.get_gravel(self)
             temp = random.uniform(0.2,0.4)
             
-            cmds.scale(random.uniform(0.7,0.9)*randomsize, temp*randomsize, randomsize, gravel)
-            cmds.move(x, temp*randomsize/2, z, gravel)
+            cmds.scale(random.uniform(0.7,0.9)*self.randomsize, temp*self.randomsize, self.randomsize, gravel)
+            cmds.move(x, temp*self.randomsize/2, z, gravel)
             cmds.move(x, 0, z, ".scalePivot", ".rotatePivot", absolute=True)
             cmds.rotate(0, random.uniform(-45.0, 45.0), 0, gravel)
             cmds.parent(gravel, gravelGrp)
@@ -210,6 +217,7 @@ class GravelGenerator():
             # Combine the vertex of selected object to string
             for k in self.randVerts:
                 self.vertex_str_list.append("{0}.vtx[{1}]".format(self.obj, k))
+                print self.vertex_str_list
             
             # Make group for gravels and Move group position to selected map
             gravelGrp = cmds.group(empty=True, name="Gravel_Grp#")
@@ -218,6 +226,7 @@ class GravelGenerator():
             
             # Save position of the vertex selected randomly
             vertPos = [0, 0, 0]
+            rot = [0.0, 0.0, 0.0]
             for r in self.vertex_str_list:
                 
                 self.randVerts_pos = cmds.xform(r, q=True, ws=True, t=True)
@@ -225,18 +234,24 @@ class GravelGenerator():
                 for j in range(0, 3):
                     vertPos[j] = self.randVerts_pos[j]
                 
-                # Get the normal vector on selected vertex
-                self.normal = cmds.polyNormalPerVertex(r, query=True, xyz=True)[:3]
+                # Get the normal vector on selected vertex and Get rotationXYZ
+                self.normal = cmds.polyNormalPerVertex(r, query=True, normalXYZ=True)[:3]
+                
+                rot[0] = cmds.angleBetween( v1=self.normal, v2=(1.0, 0.0, 0.0) )[3] - 90
+                rot[1] = cmds.angleBetween( v1=self.normal, v2=(0.0, 1.0, 0.0) )[3] - 90
+                rot[2] = cmds.angleBetween( v1=self.normal, v2=(0.0, 0.0, 1.0) )[3] - 90
                 
                 # Create and Arrange the gravels.
-                randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
+                self.randomsize = random.uniform(self.min_size, self.max_size)*self.global_size
                 
                 gravel = self.get_gravel(self)
+                
                 temp = random.uniform(0.2,0.4)
-                cmds.scale(random.uniform(0.7,0.9)*randomsize, temp*randomsize, randomsize, gravel)
-                cmds.move(vertPos[0], vertPos[1]+temp*randomsize/2, vertPos[2], gravel)
+                cmds.scale(random.uniform(0.7,0.9)*self.randomsize, temp*self.randomsize, self.randomsize, gravel)
+                cmds.move(vertPos[0], vertPos[1]+temp*self.randomsize/2, vertPos[2], gravel)
                 cmds.move(vertPos[0], vertPos[1], vertPos[2], ".scalePivot", ".rotatePivot", absolute=True)
-                cmds.rotate(0, random.uniform(-45.0, 45.0), 0, gravel)
+                cmds.rotate(rot[0], rot[1], rot[2], gravel)
+                
                 cmds.parent(gravel, gravelGrp)
                 self.amount_idx += 1
             
@@ -245,7 +260,6 @@ class GravelGenerator():
         
     def reset(self, args):
         # Reset the values by default
-        
         cmds.intSliderGrp(self.amount_str, edit=True, value=True)
         cmds.floatSliderGrp(self.global_size_str, edit=True, value=True)
         cmds.floatSliderGrp(self.max_size_str, edit=True, value=True)
@@ -258,7 +272,7 @@ class GravelGenerator():
         
     def close(self, args):
         # Close the window
-        if cmds.window(self.win, exists=True): 
+        if cmds.window(self.win, exists=True):
             cmds.deleteUI(self.win, window=True)
 
 
