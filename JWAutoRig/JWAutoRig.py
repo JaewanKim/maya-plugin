@@ -1,0 +1,314 @@
+import maya.cmds as cmds
+
+class JWAutoRig():
+	'''
+		Description : AutoRig.py made by JW
+					  STEP 1. Create Joints
+					  STEP 2. Check Joint Orientation
+					  STEP 3. Create Controllers
+					  STEP 4. Build
+
+		Things to do :
+			- Grouping neatly (STEP 1)
+			- Other Methods
+			- Layout
+	'''
+    
+    def __init__(self):
+        
+        # Window
+        if (cmds.window("JWAutoRig", exists=True)):
+            cmds.deleteUI("JWAutoRig", window=True)
+        
+        self.win = cmds.window("JWAutoRig", title="JWAutoRig", sizeable=True, resizeToFitChildren=True, menuBar=True)
+        
+        # Menu Bar
+        fileMenu = cmds.menu(label="Edit")
+        saveOption = cmds.menuItem(label="Save Settings", enable=False)
+        resetOption = cmds.menuItem(label="Reset Settings", enable=False)
+        
+        helpMenu = cmds.menu(label="Help")
+        helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
+        cmds.setParent("..")
+        
+        # Button Group
+        cmds.columnLayout()
+        cmds.separator(h=5, style='single', hr=True)
+        
+        cmds.button(label="Create Joint", command=self.create_jnt)
+        cmds.button(label="Confirm Joint Orient", command=self.confirm_orient_joint)
+        cmds.button(label="Control Generate", command=self.create_ctrl)
+        cmds.button(label="Build", command=self.build)
+        
+        cmds.separator(h=5, style='single', hr=True)
+        cmds.setParent("..")
+        
+        cmds.showWindow(self.win)
+    
+    
+    def create_jnt(self, args):
+        '''
+            STEP 1: Create Joint
+        '''
+        
+        cmds.select(clear=True)
+        
+        # Head Joint
+        head_jnt_grp = cmds.group(empty=True, n="head_jnt_grp")
+        cmds.move(0, 14.447, -0.066, head_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0, 14.447, -0.066], rad=0.6, n='head_001_jnt')
+        cmds.joint(a=True, p=[0, 15.963, -0.066], rad=0.6, n='head_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('head_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Jaw Joint
+        jaw_jnt_grp = cmds.group(empty=True, n="jaw_jnt_grp")
+        cmds.move(0, 14.447, -0.066, jaw_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0, 14.447, -0.066], rad=0.6, n='jaw_001_jnt')
+        cmds.joint(a=True, p=[0, 14.094, 0.707], rad=0.6, n='jaw_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('jaw_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xzy', sao='zup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Neck Joint
+        neck_jnt_grp = cmds.group(empty=True, n="neck_jnt_grp")
+        cmds.move(0, 13.322, -0.366, neck_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0, 13.322, -0.366], rad=0.6, n='neck_001_jnt')
+        cmds.joint(a=True, p=[0, 13.91, -0.209], rad=0.6, n='neck_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 14.447, -0.066], rad=0.6, n='neck_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('neck_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xzy', sao='zup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Left Shoulder Joint
+        shoulder_jnt_grp = cmds.group(empty=True, n="shoulder_jnt_grp")
+        cmds.move(0, 12.965, -0.251, shoulder_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+
+        cmds.joint(a=True, p=[0.232, 12.965, -0.251], rad=0.6, n='shoulder_lf_001_jnt')
+        cmds.joint(a=True, p=[1.135, 13.093, -0.504], rad=0.6, n='shoulder_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('shoulder_lf_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Left Arm Joint
+        arm_lf_jnt_grp = cmds.group(empty=True, n="arm_lf_jnt_grp")
+        cmds.move(1.135, 13.093, -0.504, arm_lf_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[1.135, 13.093, -0.504], rad=0.6, n='arm_lf_ik_shoulder_jntt')
+        cmds.joint(a=True, p=[2.992, 11.146, -0.809], rad=0.6, n='arm_lf_ik_elbow_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[4.556, 9.612, -0.458], rad=0.6, n='arm_lf_ik_wrist_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.824, 8.343, -0.32], rad=0.6, n='arm_lf_ik_hand_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('arm_lf_ik_shoulder_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Left Hand Joint
+        # Thumb
+        hand_lf_jnt_grp = cmds.group(empty=True, n="hand_lf_jnt_grp")
+        cmds.move(4.556, 9.612, -0.458, hand_lf_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[4.691, 9.483, -0.228], rad=0.1, n='thumb_lf_001_jntt')
+        cmds.joint(a=True, p=[4.851, 9.195, 0.036], rad=0.1, n='thumb_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.024, 8.925, 0.138], rad=0.1, n='thumb_lf_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.186, 8.694, 0.144], rad=0.1, n='thumb_lf_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('thumb_lf_001_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='zup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        # Index
+        cmds.select(hand_lf_jnt_grp, replace=True)
+        cmds.joint(a=True, p=[5.272, 9.168, -0.203], rad=0.1, n='index_lf_001_jntt')
+        cmds.joint(a=True, p=[5.548, 8.913, -0.07], rad=0.1, n='index_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.61, 8.694, -0.004], rad=0.1, n='index_lf_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.63, 8.49, 0.046], rad=0.1, n='index_lf_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('index_lf_001_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        # Middle
+        cmds.select(hand_lf_jnt_grp, replace=True)
+        cmds.joint(a=True, p=[5.286, 9.176, -0.423], rad=0.1, n='middle_lf_001_jntt')
+        cmds.joint(a=True, p=[5.605, 8.834, -0.376], rad=0.1, n='middle_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.678, 8.604, -0.354], rad=0.1, n='middle_lf_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.702, 8.373, -0.336], rad=0.1, n='middle_lf_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('middle_lf_001_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        # Ring
+        cmds.select(hand_lf_jnt_grp, replace=True)
+        cmds.joint(a=True, p=[5.206, 9.126, -0.574], rad=0.1, n='ring_lf_001_jntt')
+        cmds.joint(a=True, p=[5.501, 8.846, -0.639], rad=0.1, n='ring_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.508, 8.61, -0.619], rad=0.1, n='ring_lf_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.477, 8.378, -0.586], rad=0.1, n='ring_lf_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('ring_lf_001_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        # Pinky
+        cmds.select(hand_lf_jnt_grp, replace=True)
+        cmds.joint(a=True, p=[5.069, 9.116, -0.734], rad=0.1, n='pinky_lf_001_jntt')
+        cmds.joint(a=True, p=[5.209, 8.834, -0.826], rad=0.1, n='pinky_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.233, 8.673, -0.842], rad=0.1, n='pinky_lf_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[5.236, 8.465, -0.843], rad=0.1, n='pinky_lf_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('pinky_lf_001_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Spine Joint
+        spine_jnt_grp = cmds.group(empty=True, n="spine_ik_bind_jnt_grp")
+        cmds.move(0, 8.869, 0.316, spine_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0, 8.869, 0.316], rad=0.6, n='spine_ik_bind_001_jnt')
+        cmds.joint(a=True, p=[0, 9.742, 0.404], rad=0.6, n='spine_ik_bind_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 10.017, 0.414], rad=0.6, n='spine_ik_bind_003_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 10.306, 0.414], rad=0.6, n='spine_ik_bind_004_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 10.593, 0.402], rad=0.6, n='spine_ik_bind_005_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 10.862, 0.379], rad=0.6, n='spine_ik_bind_006_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 11.124, 0.345], rad=0.6, n='spine_ik_bind_007_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 11.406, 0.295], rad=0.6, n='spine_ik_bind_008_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='spine_ik_bind_009_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('spine_ik_bind_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='zup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Left Pelvis Joint
+        pelvis_lf_jnt_grp = cmds.group(empty=True, n="pelvis_lf_jnt_grp")
+        cmds.move(0.181, 8.85, 0.266, pelvis_lf_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0.181, 8.85, 0.266], rad=0.6, n='pelvis_lf_001_jnt')
+        cmds.joint(a=True, p=[0.967, 8.495, 0.266], rad=0.6, n='pelvis_lf_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('pelvis_lf_001_jnt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.select(clear=True)
+        
+        
+        # Left Leg Joint
+        leg_lf_jnt_grp = cmds.group(empty=True, n="leg_lf_jnt_grp")
+        cmds.move(0.967, 8.495, 0.266, leg_lf_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.joint(a=True, p=[0.967, 8.495, 0.266], rad=0.6, n='leg_lf_ik_tight_jntt')
+        cmds.joint(a=True, p=[0.967, 5.156, 0.344], rad=0.6, n='leg_lf_ik_shin_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0.967, 0.785, -0.193], rad=0.6, n='leg_lf_ik_ankle_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0.967, 0.186, 0.733], rad=0.6, n='leg_lf_ik_ball_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0.967, 0.186, 1.418], rad=0.6, n='leg_lf_ik_toe_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('leg_lf_ik_tight_jntt', hi=True)
+        cmds.joint(e=True, oj='xyz', sao='zup', ch=True, zso=True)    # Orient Joint Options
+        cmds.select(clear=True)
+        
+        ### Left Foot Joint    # When create controllers
+        
+        # Mirror Joint
+        cmds.mirrorJoint('shoulder_lf_001_jnt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('arm_lf_ik_shoulder_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('pelvis_lf_001_jnt', myz=True, mb=False, sr=('lf', 'rt'))
+        cmds.mirrorJoint('leg_lf_ik_tight_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('leg_lf_ik_tight_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('thumb_lf_001_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('index_lf_001_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('middle_lf_001_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('ring_lf_001_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.mirrorJoint('pinky_lf_001_jntt', myz=True, mb=True, sr=('lf', 'rt'))
+        cmds.select(clear=True)
+        
+        
+        # Make up the Joint Groups
+        shoulder_lf_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp',n="shoulder_lf_jnt_grp")
+        cmds.move(0.232, 12.965, -0.251, shoulder_lf_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('shoulder_lf_001_jnt', 'shoulder_lf_jnt_grp')
+        
+        shoulder_rt_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n="shoulder_rt_jnt_grp")
+        cmds.move(-0.232, 12.965, -0.251, shoulder_rt_jnt_grp)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('shoulder_rt_001_jnt', 'shoulder_rt_jnt_grp')
+        
+        cmds.select(clear=True)
+        
+    def confirm_orient_joint(self, args):
+        pass
+        cmds.toggle('', la=True)
+    
+    
+    def create_ctrl(self, args):
+        pass
+    
+    
+    def build(self, args):
+        pass
+    
+    
+    def showHelp(self, args):
+        cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
+
+
+JWAutoRig()
