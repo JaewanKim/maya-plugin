@@ -9,7 +9,7 @@ class JWAutoRig():
             STEP 4. Build
         
         Things to do :
-            - Joints for FK, BIND (STEP 1)
+            - Rename Joints for FK, BIND - by Search Replace Options (STEP 1)
             - Other Methods
             - Layout
     '''
@@ -205,7 +205,7 @@ class JWAutoRig():
         
         
         # Spine Joint
-        spine_jnt_grp = cmds.group(empty=True, n="spine_ik_bind_jnt_grp")
+        spine_jnt_grp = cmds.group(empty=True, n="spine_jnt_grp")
         cmds.move(0, 8.869, 0.316, spine_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -291,15 +291,15 @@ class JWAutoRig():
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('shoulder_rt_001_jnt', shoulder_rt_jnt_grp)
         
-        arm_lf_ik_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_lf_ik_jnt_grp")
-        cmds.move(1.135, 13.093, -0.504, arm_lf_ik_jnt_grp)
+        arm_lf_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_lf_jnt_grp")
+        cmds.move(1.135, 13.093, -0.504, arm_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-        cmds.parent('arm_lf_ik_shoulder_jntt', arm_lf_ik_jnt_grp)
+        cmds.parent('arm_lf_ik_shoulder_jntt', arm_lf_jnt_grp)
         
-        arm_rt_ik_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_rt_ik_jnt_grp")
-        cmds.move(-1.135, 13.093, -0.504, arm_rt_ik_jnt_grp)
+        arm_rt_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_rt_jnt_grp")
+        cmds.move(-1.135, 13.093, -0.504, arm_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-        cmds.parent('arm_rt_ik_shoulder_jntt', arm_rt_ik_jnt_grp)
+        cmds.parent('arm_rt_ik_shoulder_jntt', arm_rt_jnt_grp)
         
         hand_lf_jnt_grp = cmds.group(empty=True, parent='hand_jnt_grp', n="hand_lf_jnt_grp")
         cmds.move(4.556, 9.612, -0.458, hand_lf_jnt_grp)
@@ -339,8 +339,40 @@ class JWAutoRig():
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('leg_rt_ik_tight_jntt', leg_rt_jnt_grp)
         
+        cmds.select(clear=True)
+        
+        
+        # Duplicate IK Joints for FK,BIND
+        cmds.duplicate('arm_lf_ik_shoulder_jntt')
+        cmds.rename('arm_lf_ik_shoulder_jntt1', 'arm_lf_fk_shoulder_jntt')
+        cmds.duplicate('arm_lf_ik_shoulder_jntt')
+        cmds.rename('arm_lf_ik_shoulder_jntt1', 'arm_lf_bind_shoulder_jntt')
+        
+        cmds.duplicate('arm_rt_ik_shoulder_jntt')
+        cmds.rename('arm_rt_ik_shoulder_jntt1', 'arm_rt_fk_shoulder_jntt')
+        cmds.duplicate('arm_rt_ik_shoulder_jntt')
+        cmds.rename('arm_rt_ik_shoulder_jntt1', 'arm_rt_bind_shoulder_jntt')
+        
+        cmds.duplicate('spine_ik_bind_001_jnt')
+        cmds.rename('spine_ik_bind_001_jnt1', 'spine_fk_001_jnt')
+        cmds.delete('spine_ik_bind_003_jnt')
+        cmds.delete('spine_ik_bind_004_jnt')
+        cmds.delete('spine_ik_bind_005_jnt')
+        cmds.delete('spine_ik_bind_007_jnt')
+        cmds.delete('spine_ik_bind_008_jnt')
+        
+        cmds.duplicate('leg_lf_ik_tight_jntt')
+        cmds.rename('leg_lf_ik_tight_jntt1', 'leg_lf_fk_tight_jntt')
+        cmds.duplicate('leg_lf_ik_tight_jntt')
+        cmds.rename('leg_lf_ik_tight_jntt1', 'leg_lf_bind_tight_jntt')
+        
+        cmds.duplicate('leg_rt_ik_tight_jntt')
+        cmds.rename('leg_rt_ik_tight_jntt1', 'leg_rt_fk_tight_jntt')
+        cmds.duplicate('leg_rt_ik_tight_jntt')
+        cmds.rename('leg_rt_ik_tight_jntt1', 'leg_rt_bind_tight_jntt')
         
         cmds.select(clear=True)
+        
         
     def confirm_orient_joint(self, args):
         pass
