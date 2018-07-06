@@ -1,5 +1,4 @@
 import maya.cmds as cmds
-import maya.mel as mel
 
 class JWAutoRig():
     '''
@@ -10,7 +9,7 @@ class JWAutoRig():
             STEP 4. Build
         
         Things to do :
-            - Checking Joint Orientation Method
+            - Create Joint Controllers
             - Other Methods
             - Layout
             - Refactoring
@@ -492,20 +491,24 @@ class JWAutoRig():
             cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
         #
         
-        
         cmds.select(clear=True)
         
         
     def confirm_orient_joint(self, args):
+        '''
+            STEP 2: Check Joint Orientation
+        '''
         
-        all_joints = cmds.ls(sl=True, type='joints')
-        for a in tmp:
-            if a is joint
-                cmds.select(add=True)
+        cmds.select(all=True, hi=True)
+        selectedObjs = cmds.ls(sl=True)
         
-        cmds.toggleAxis( v=False )
-    
-    
+        for obj in selectedObjs:
+            if (cmds.objectType(obj) == 'joint'):
+                cmds.toggle(obj, localAxis=True)
+        
+        cmds.select(clear=True)
+        
+        
     def create_ctrl(self, args):
         pass
     
