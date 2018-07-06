@@ -7,10 +7,12 @@ class JWAutoRig():
             STEP 2. Check Joint Orientation
             STEP 3. Create Controllers
             STEP 4. Build
+            STEP 5. Import Weight
         
         Things to do :
             - Create Joint Controllers
-            - Other Methods
+            - Build
+            - Import Weight (fileDialog2/fileBrowseDialog)
             - Layout
             - Refactoring
     '''
@@ -29,7 +31,7 @@ class JWAutoRig():
         resetOption = cmds.menuItem(label="Reset Settings", enable=False)
         
         helpMenu = cmds.menu(label="Help")
-        helpOption = cmds.menuItem(label="Help on Gravel Generator", command=self.showHelp)
+        helpOption = cmds.menuItem(label="Help on JWAutoRig.py", command=self.showHelp)
         cmds.setParent("..")
         
         # Button Group
@@ -40,6 +42,7 @@ class JWAutoRig():
         cmds.button(label="Confirm Joint Orient", command=self.confirm_orient_joint)
         cmds.button(label="Control Generate", command=self.create_ctrl)
         cmds.button(label="Build", command=self.build)
+        cmds.button(label="Import Weight", command=self.import_weight)
         
         cmds.separator(h=5, style='single', hr=True)
         cmds.setParent("..")
@@ -510,10 +513,28 @@ class JWAutoRig():
         
         
     def create_ctrl(self, args):
+        '''
+            STEP 3: Create Controllers
+        '''
         pass
     
-    
+
     def build(self, args):
+        '''
+            STEP 4: Build
+        '''
+        pass
+    
+
+    def import_weight(self, args):
+        '''
+            STEP 5: Import Weight
+        '''
+        pass
+        cmds.fileBrowserDialog(mode=0, fileCommand=self.apply_weight, fileType='directory', an='Import weight', operationMode='Import')
+        
+
+    def apply_weight(self, fileName, fileType):
         pass
     
     
