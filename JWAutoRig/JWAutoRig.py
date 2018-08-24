@@ -11,8 +11,7 @@ class JWAutoRig():
         
         Things to do :
             - Build (In progress)
-                - IK Spline
-                - Shoulder, Pelvis
+                - Set Attributes
             - Import Weight (fileDialog2/fileBrowseDialog)
             - Layout
             - Refactoring
@@ -750,6 +749,7 @@ class JWAutoRig():
                 cmds.parent('spine_ik_bind_008_jnt_ctrl_grp' ,w=True)
                 cmds.delete('spine_ik_bind_002_jnt_ctrl_grp')
                 
+                
                 self.shape = 'CIRCLE'
                 cmds.select('spine_fk_001_jnt', hi=True)
                 self.ctrl_gen(self)
@@ -766,6 +766,13 @@ class JWAutoRig():
                 cmds.rename('spine_ik_bind_001_jnt_ctrl', 'lower_body_ctrl')
                 cmds.rename('spine_ik_bind_008_jnt_ctrl_grp', 'upper_body_ctrl_grp')
                 cmds.rename('spine_ik_bind_008_jnt_ctrl', 'upper_body_ctrl')
+                
+                cmds.joint(a=True, p=[0, 8.869, 0.316], rad=0.6, n='lower_body_jnt')
+                cmds.parent('lower_body_jnt', 'lower_body_ctrl')
+                cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='upper_body_jnt')
+                cmds.parent('upper_body_jnt', 'upper_body_ctrl')
+                cmds.select('upper_body_ctrl')
+                cmds.move(0, 11.847, 0.188, ".scalePivot", ".rotatePivot", a=True)
             
             elif (obj == 'pelvis_jnt_grp'):
                 self.shape = 'PELVIS'
@@ -872,9 +879,8 @@ class JWAutoRig():
                 cmds.rename('leg_rt_ik_shin_jnt_ctrl_grp', 'leg_rt_pv_ctrl_grp')
                 cmds.rename('leg_lf_ik_shin_jnt_ctrl', 'leg_lf_pv_ctrl')
                 cmds.rename('leg_rt_ik_shin_jnt_ctrl', 'leg_rt_pv_ctrl')
-                
-        # Eye CTRL
         
+        # Eye CTRL
         
         # CTRL Grouping
         ctrl_grp = cmds.group(empty=True, p="ch_grp", n="ctrl_grp")
@@ -1162,6 +1168,7 @@ class JWAutoRig():
         '''
         
         ''' CTRLs' Attributes Setting '''
+        
         # Add Foot Atribute
         foot_ik_lf_bank_grp = cmds.group(empty=True, n="foot_ik_lf_bank_grp")
         cmds.move(0.967, 0.186, 0.733, foot_ik_lf_bank_grp)
@@ -1263,6 +1270,26 @@ class JWAutoRig():
         cmds.parent('rt_hand_ikHandle', 'rt_wrist_ikHandle')
         cmds.parent('rt_wrist_ikHandle', 'arm_rt_ik_wrist_jnt_ctrl')
         
+        ## Spine
+        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
+        
+        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
+        
+        ik_handle = cmds.ikHandle(sj='spine_ik_bind_001_jnt', ee='spine_ik_bind_009_jnt', sol='ikSplineSolver', ns=4)[0]
+        cmds.parent(ik_handle, 'spine_jnt_grp')
+        cmds.rename(ik_handle, 'spine_ik_bind_001_ikHandle')
+        cmds.rename('curve1', 'spine_ik_bind_001_crv')
+        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
+        cmds.skinCluster('lower_body_jnt', 'upper_body_jnt', 'spine_ik_bind_001_crv', dr=4.5)    # bindSkin() ERR
+        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
+        
+        
         ## Leg
         ik_handle = cmds.ikHandle(sj='leg_lf_ik_tight_jnt', ee='leg_lf_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
         cmds.rename(ik_handle, 'lf_ankle_ikHandle')
@@ -1298,6 +1325,15 @@ class JWAutoRig():
         cmds.parentConstraint('neck_001_jnt_ctrl', 'neck_001_jnt', w=1, mo=True)
         cmds.parentConstraint('neck_002_jnt_ctrl', 'neck_002_jnt', w=1, mo=True)
         
+        ## Shoulder
+        cmds.parentConstraint('shoulder_lf_001_jnt_ctrl', 'shoulder_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('shoulder_rt_001_jnt_ctrl', 'shoulder_rt_001_jnt', w=1, mo=True)
+        
+        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
+        
         ## Arm FK
         cmds.parentConstraint('arm_lf_fk_shoulder_jnt_ctrl', 'arm_lf_fk_shoulder_jnt', w=1, mo=True)
         cmds.parentConstraint('arm_lf_fk_elbow_jnt_ctrl', 'arm_lf_fk_elbow_jnt', w=1, mo=True)
@@ -1306,6 +1342,10 @@ class JWAutoRig():
         cmds.parentConstraint('arm_rt_fk_shoulder_jnt_ctrl', 'arm_rt_fk_shoulder_jnt', w=1, mo=True)
         cmds.parentConstraint('arm_rt_fk_elbow_jnt_ctrl', 'arm_rt_fk_elbow_jnt', w=1, mo=True)
         cmds.parentConstraint('arm_rt_fk_wrist_jnt_ctrl', 'arm_rt_fk_wrist_jnt', w=1, mo=True)
+        
+        ## Hand
+        cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'hand_lf_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'hand_rt_ctrl_grp', w=1, mo=True)
         
         ## Left Hand
         cmds.parentConstraint('thumb_lf_001_jnt_ctrl', 'thumb_lf_001_jnt', w=1, mo=True)
@@ -1349,6 +1389,15 @@ class JWAutoRig():
         cmds.parentConstraint('pinky_rt_002_jnt_ctrl', 'pinky_rt_002_jnt', w=1, mo=True)
         cmds.parentConstraint('pinky_rt_003_jnt_ctrl', 'pinky_rt_003_jnt', w=1, mo=True)
         
+        ## Pelvis
+        cmds.parentConstraint('pelvis_lf_001_jnt_ctrl', 'pelvis_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('pelvis_rt_001_jnt_ctrl', 'pelvis_rt_001_jnt', w=1, mo=True)
+        
+        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
+        
         ## Leg
         cmds.parentConstraint('leg_lf_fk_tight_jnt_ctrl', 'leg_lf_fk_tight_jnt', w=1, mo=True)
         cmds.parentConstraint('leg_lf_fk_shin_jnt_ctrl', 'leg_lf_fk_shin_jnt', w=1, mo=True)
@@ -1360,13 +1409,14 @@ class JWAutoRig():
         cmds.parentConstraint('leg_rt_fk_ankle_jnt_ctrl', 'leg_rt_fk_ankle_jnt', w=1, mo=True)
         cmds.parentConstraint('leg_rt_fk_ball_jnt_ctrl', 'leg_rt_fk_ball_jnt', w=1, mo=True)
         
-        
         ## Attach Switch to IK CTRL
         cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'arm_lf_switch', w=1, mo=True)
         cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'arm_rt_switch', w=1, mo=True)
         
         cmds.parentConstraint('leg_lf_bind_ankle_jnt', 'leg_lf_switch', w=1, mo=True)
         cmds.parentConstraint('leg_rt_bind_ankle_jnt', 'leg_rt_switch', w=1, mo=True)
+        
+        cmds.select(clear=True)
     
     
     def import_weight(self, args):
