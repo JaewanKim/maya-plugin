@@ -1167,9 +1167,184 @@ class JWAutoRig():
             STEP 4: Build
         '''
         
-        ''' CTRLs' Attributes Setting '''
+        # Head CTRL
+        cmds.parentConstraint('head_001_jnt_ctrl', 'head_001_jnt', w=1, mo=True)
         
-        # Add Foot Atribute
+        # Jaw CTRL
+        cmds.parentConstraint('jaw_001_jnt_ctrl', 'jaw_001_jnt', w=1, mo=True)
+        
+        # Neck CTRL
+        cmds.parentConstraint('neck_001_jnt_ctrl', 'neck_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('neck_002_jnt_ctrl', 'neck_002_jnt', w=1, mo=True)
+        
+        # Shoulder CTRL
+        cmds.parentConstraint('shoulder_lf_001_jnt_ctrl', 'shoulder_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('shoulder_rt_001_jnt_ctrl', 'shoulder_rt_001_jnt', w=1, mo=True)
+        
+        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
+        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
+        
+        # Arm
+        ## Link IK,FK,Bind Arm Joints 
+        cmds.orientConstraint('arm_lf_ik_shoulder_jnt', 'arm_lf_fk_shoulder_jnt', 'arm_lf_bind_shoulder_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_lf_ik_elbow_jnt', 'arm_lf_fk_elbow_jnt', 'arm_lf_bind_elbow_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_lf_ik_wrist_jnt', 'arm_lf_fk_wrist_jnt', 'arm_lf_bind_wrist_jnt', w=1, mo=True)
+        
+        cmds.orientConstraint('arm_rt_ik_shoulder_jnt', 'arm_rt_fk_shoulder_jnt', 'arm_rt_bind_shoulder_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_rt_ik_elbow_jnt', 'arm_rt_fk_elbow_jnt', 'arm_rt_bind_elbow_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_rt_ik_wrist_jnt', 'arm_rt_fk_wrist_jnt', 'arm_rt_bind_wrist_jnt', w=1, mo=True)
+        
+        ## Set Arm CTRL
+        cmds.parentConstraint('arm_lf_fk_shoulder_jnt_ctrl', 'arm_lf_fk_shoulder_jnt', w=1, mo=True)
+        cmds.parentConstraint('arm_lf_fk_elbow_jnt_ctrl', 'arm_lf_fk_elbow_jnt', w=1, mo=True)
+        cmds.parentConstraint('arm_lf_fk_wrist_jnt_ctrl', 'arm_lf_fk_wrist_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('arm_rt_fk_shoulder_jnt_ctrl', 'arm_rt_fk_shoulder_jnt', w=1, mo=True)
+        cmds.parentConstraint('arm_rt_fk_elbow_jnt_ctrl', 'arm_rt_fk_elbow_jnt', w=1, mo=True)
+        cmds.parentConstraint('arm_rt_fk_wrist_jnt_ctrl', 'arm_rt_fk_wrist_jnt', w=1, mo=True)
+        
+        ## Create Arm IK Handles
+        ik_handle = cmds.ikHandle(sj='arm_lf_ik_shoulder_jnt', ee='arm_lf_ik_wrist_jnt', sol='ikRPsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'lf_wrist_ikHandle')
+        ik_handle = cmds.ikHandle(sj='arm_lf_ik_wrist_jnt', ee='arm_lf_ik_hand_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'lf_hand_ikHandle')
+        cmds.poleVectorConstraint('arm_lf_pv_ctrl', 'lf_wrist_ikHandle', w=1)
+        cmds.parent('lf_hand_ikHandle', 'lf_wrist_ikHandle')
+        cmds.parent('lf_wrist_ikHandle', 'arm_lf_ik_wrist_jnt_ctrl')
+        
+        ik_handle = cmds.ikHandle(sj='arm_rt_ik_shoulder_jnt', ee='arm_rt_ik_wrist_jnt', sol='ikRPsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'rt_wrist_ikHandle')
+        ik_handle = cmds.ikHandle(sj='arm_rt_ik_wrist_jnt', ee='arm_rt_ik_hand_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'rt_hand_ikHandle')
+        cmds.poleVectorConstraint('arm_rt_pv_ctrl', 'rt_wrist_ikHandle', w=1)
+        cmds.parent('rt_hand_ikHandle', 'rt_wrist_ikHandle')
+        cmds.parent('rt_wrist_ikHandle', 'arm_rt_ik_wrist_jnt_ctrl')
+        
+        # Hand
+        cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'hand_lf_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'hand_rt_ctrl_grp', w=1, mo=True)
+        
+        ## Set Left Hand CTRL
+        cmds.parentConstraint('thumb_lf_001_jnt_ctrl', 'thumb_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('thumb_lf_002_jnt_ctrl', 'thumb_lf_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('thumb_lf_003_jnt_ctrl', 'thumb_lf_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('index_lf_001_jnt_ctrl', 'index_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('index_lf_002_jnt_ctrl', 'index_lf_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('index_lf_003_jnt_ctrl', 'index_lf_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('middle_lf_001_jnt_ctrl', 'middle_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('middle_lf_002_jnt_ctrl', 'middle_lf_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('middle_lf_003_jnt_ctrl', 'middle_lf_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('ring_lf_001_jnt_ctrl', 'ring_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('ring_lf_002_jnt_ctrl', 'ring_lf_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('ring_lf_003_jnt_ctrl', 'ring_lf_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('pinky_lf_001_jnt_ctrl', 'pinky_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('pinky_lf_002_jnt_ctrl', 'pinky_lf_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('pinky_lf_003_jnt_ctrl', 'pinky_lf_003_jnt', w=1, mo=True)
+        
+        ## Set Right Hand CTRL
+        cmds.parentConstraint('thumb_rt_001_jnt_ctrl', 'thumb_rt_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('thumb_rt_002_jnt_ctrl', 'thumb_rt_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('thumb_rt_003_jnt_ctrl', 'thumb_rt_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('index_rt_001_jnt_ctrl', 'index_rt_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('index_rt_002_jnt_ctrl', 'index_rt_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('index_rt_003_jnt_ctrl', 'index_rt_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('middle_rt_001_jnt_ctrl', 'middle_rt_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('middle_rt_002_jnt_ctrl', 'middle_rt_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('middle_rt_003_jnt_ctrl', 'middle_rt_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('ring_rt_001_jnt_ctrl', 'ring_rt_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('ring_rt_002_jnt_ctrl', 'ring_rt_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('ring_rt_003_jnt_ctrl', 'ring_rt_003_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('pinky_rt_001_jnt_ctrl', 'pinky_rt_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('pinky_rt_002_jnt_ctrl', 'pinky_rt_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('pinky_rt_003_jnt_ctrl', 'pinky_rt_003_jnt', w=1, mo=True)
+        
+        
+        # Spine
+        ## Set Spine CTRL
+        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
+        
+        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
+        
+        ## Create Spine IK Handles 
+        ik_handle = cmds.ikHandle(sj='spine_ik_bind_001_jnt', ee='spine_ik_bind_009_jnt', sol='ikSplineSolver', ns=4)[0]
+        cmds.parent(ik_handle, 'spine_jnt_grp')
+        cmds.rename(ik_handle, 'spine_ik_bind_001_ikHandle')
+        cmds.rename('curve1', 'spine_ik_bind_001_crv')
+        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
+        cmds.skinCluster('lower_body_jnt', 'upper_body_jnt', 'spine_ik_bind_001_crv', dr=4.5)    # bindSkin() ERR
+        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
+        
+        # Pelvis
+        ## Set Pelvis CTRL
+        cmds.parentConstraint('pelvis_lf_001_jnt_ctrl', 'pelvis_lf_001_jnt', w=1, mo=True)
+        cmds.parentConstraint('pelvis_rt_001_jnt_ctrl', 'pelvis_rt_001_jnt', w=1, mo=True)
+        
+        ## Set Pelvis Follow Leg Joint
+        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_jnt_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
+        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
+        
+        
+        # Leg
+        ## Link IK,FK,Bind Leg Joints 
+        cmds.orientConstraint('leg_lf_ik_tight_jnt', 'leg_lf_fk_tight_jnt', 'leg_lf_bind_tight_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_shin_jnt', 'leg_lf_fk_shin_jnt', 'leg_lf_bind_shin_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_ankle_jnt', 'leg_lf_fk_ankle_jnt', 'leg_lf_bind_ankle_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_ball_jnt', 'leg_lf_fk_ball_jnt', 'leg_lf_bind_ball_jnt', w=1, mo=True)
+        
+        cmds.orientConstraint('leg_rt_ik_tight_jnt', 'leg_rt_fk_tight_jnt', 'leg_rt_bind_tight_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_shin_jnt', 'leg_rt_fk_shin_jnt', 'leg_rt_bind_shin_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_ankle_jnt', 'leg_rt_fk_ankle_jnt', 'leg_rt_bind_ankle_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_ball_jnt', 'leg_rt_fk_ball_jnt', 'leg_rt_bind_ball_jnt', w=1, mo=True)
+        
+        ## Create Leg IK Hadles
+        ik_handle = cmds.ikHandle(sj='leg_lf_ik_tight_jnt', ee='leg_lf_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'lf_ankle_ikHandle')
+        ik_handle = cmds.ikHandle(sj='leg_lf_ik_ankle_jnt', ee='leg_lf_ik_ball_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'lf_ankleToBall_ikHandle')
+        ik_handle = cmds.ikHandle(sj='leg_lf_ik_ball_jnt', ee='leg_lf_ik_toe_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'lf_ballToToe_ikHandle')
+        cmds.poleVectorConstraint('leg_lf_pv_ctrl', 'lf_ankle_ikHandle', w=1)
+        
+        ik_handle = cmds.ikHandle(sj='leg_rt_ik_tight_jnt', ee='leg_rt_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'rt_ankle_ikHandle')
+        ik_handle = cmds.ikHandle(sj='leg_rt_ik_ankle_jnt', ee='leg_rt_ik_ball_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'rt_ankleToBall_ikHandle')
+        ik_handle = cmds.ikHandle(sj='leg_rt_ik_ball_jnt', ee='leg_rt_ik_toe_jnt', sol='ikSCsolver', p=2, w=1)[0]
+        cmds.rename(ik_handle, 'rt_ballToToe_ikHandle')
+        cmds.poleVectorConstraint('leg_rt_pv_ctrl', 'rt_ankle_ikHandle', w=1)
+        
+        ## Create Leg CTRL
+        cmds.parentConstraint('leg_lf_fk_tight_jnt_ctrl', 'leg_lf_fk_tight_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_lf_fk_shin_jnt_ctrl', 'leg_lf_fk_shin_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_lf_fk_ankle_jnt_ctrl', 'leg_lf_fk_ankle_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_lf_fk_ball_jnt_ctrl', 'leg_lf_fk_ball_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('leg_rt_fk_tight_jnt_ctrl', 'leg_rt_fk_tight_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_rt_fk_shin_jnt_ctrl', 'leg_rt_fk_shin_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_rt_fk_ankle_jnt_ctrl', 'leg_rt_fk_ankle_jnt', w=1, mo=True)
+        cmds.parentConstraint('leg_rt_fk_ball_jnt_ctrl', 'leg_rt_fk_ball_jnt', w=1, mo=True)
+        
+        
+        # Foot
+        ## Add Foot Atribute
         foot_ik_lf_bank_grp = cmds.group(empty=True, n="foot_ik_lf_bank_grp")
         cmds.move(0.967, 0.186, 0.733, foot_ik_lf_bank_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
@@ -1212,6 +1387,14 @@ class JWAutoRig():
         cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
         cmds.select(clear=True)
         
+        cmds.parent('lf_ankle_ikHandle', 'ankle_ik_lf_ctrl_jnt')
+        cmds.parent('lf_ankleToBall_ikHandle', 'ball_lift_ik_lf_ctrl_jnt')
+        cmds.parent('lf_ballToToe_ikHandle', 'toe_ik_lf_ctrl_jnt')
+        
+        cmds.parent('rt_ankle_ikHandle', 'ankle_ik_rt_ctrl_jnt')
+        cmds.parent('rt_ankleToBall_ikHandle', 'ball_lift_ik_rt_ctrl_jnt')
+        cmds.parent('rt_ballToToe_ikHandle', 'toe_ik_rt_ctrl_jnt')
+        
         cmds.spaceLocator(r=True, p=[-1.475, 0.181, 0.769], n='rt_L_bank_loc')
         cmds.xform(r=True, cp=True)
         cmds.spaceLocator(r=True, p=[-0.736, 0.181, 0.769], n='rt_R_bank_loc')
@@ -1229,195 +1412,22 @@ class JWAutoRig():
         cmds.setAttr('rt_R_bank_loc.visibility', 0)
         #
         
-        ''' Joints Rel '''
-        # Arm Orient Constraint
-        cmds.orientConstraint('arm_lf_ik_shoulder_jnt', 'arm_lf_fk_shoulder_jnt', 'arm_lf_bind_shoulder_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_lf_ik_elbow_jnt', 'arm_lf_fk_elbow_jnt', 'arm_lf_bind_elbow_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_lf_ik_wrist_jnt', 'arm_lf_fk_wrist_jnt', 'arm_lf_bind_wrist_jnt', w=1, mo=True)
-        
-        cmds.orientConstraint('arm_rt_ik_shoulder_jnt', 'arm_rt_fk_shoulder_jnt', 'arm_rt_bind_shoulder_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_rt_ik_elbow_jnt', 'arm_rt_fk_elbow_jnt', 'arm_rt_bind_elbow_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_rt_ik_wrist_jnt', 'arm_rt_fk_wrist_jnt', 'arm_rt_bind_wrist_jnt', w=1, mo=True)
-        
-        # Leg Orient Constraint
-        cmds.orientConstraint('leg_lf_ik_tight_jnt', 'leg_lf_fk_tight_jnt', 'leg_lf_bind_tight_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_shin_jnt', 'leg_lf_fk_shin_jnt', 'leg_lf_bind_shin_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_ankle_jnt', 'leg_lf_fk_ankle_jnt', 'leg_lf_bind_ankle_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_ball_jnt', 'leg_lf_fk_ball_jnt', 'leg_lf_bind_ball_jnt', w=1, mo=True)
-        
-        cmds.orientConstraint('leg_rt_ik_tight_jnt', 'leg_rt_fk_tight_jnt', 'leg_rt_bind_tight_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_shin_jnt', 'leg_rt_fk_shin_jnt', 'leg_rt_bind_shin_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_ankle_jnt', 'leg_rt_fk_ankle_jnt', 'leg_rt_bind_ankle_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_ball_jnt', 'leg_rt_fk_ball_jnt', 'leg_rt_bind_ball_jnt', w=1, mo=True)
-        
-        ''' CTRLs '''
-        # IK Handles
-        
-        ## Arm 
-        ik_handle = cmds.ikHandle(sj='arm_lf_ik_shoulder_jnt', ee='arm_lf_ik_wrist_jnt', sol='ikRPsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'lf_wrist_ikHandle')
-        ik_handle = cmds.ikHandle(sj='arm_lf_ik_wrist_jnt', ee='arm_lf_ik_hand_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'lf_hand_ikHandle')
-        cmds.poleVectorConstraint('arm_lf_pv_ctrl', 'lf_wrist_ikHandle', w=1)
-        cmds.parent('lf_hand_ikHandle', 'lf_wrist_ikHandle')
-        cmds.parent('lf_wrist_ikHandle', 'arm_lf_ik_wrist_jnt_ctrl')
-        
-        ik_handle = cmds.ikHandle(sj='arm_rt_ik_shoulder_jnt', ee='arm_rt_ik_wrist_jnt', sol='ikRPsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'rt_wrist_ikHandle')
-        ik_handle = cmds.ikHandle(sj='arm_rt_ik_wrist_jnt', ee='arm_rt_ik_hand_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'rt_hand_ikHandle')
-        cmds.poleVectorConstraint('arm_rt_pv_ctrl', 'rt_wrist_ikHandle', w=1)
-        cmds.parent('rt_hand_ikHandle', 'rt_wrist_ikHandle')
-        cmds.parent('rt_wrist_ikHandle', 'arm_rt_ik_wrist_jnt_ctrl')
-        
-        ## Spine
-        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
-        
-        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
-        
-        ik_handle = cmds.ikHandle(sj='spine_ik_bind_001_jnt', ee='spine_ik_bind_009_jnt', sol='ikSplineSolver', ns=4)[0]
-        cmds.parent(ik_handle, 'spine_jnt_grp')
-        cmds.rename(ik_handle, 'spine_ik_bind_001_ikHandle')
-        cmds.rename('curve1', 'spine_ik_bind_001_crv')
-        cmds.parentConstraint('spine_fk_001_jnt_ctrl', 'spine_fk_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_002_jnt_ctrl', 'spine_fk_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_006_jnt_ctrl', 'spine_fk_006_jnt', w=1, mo=True)
-        cmds.skinCluster('lower_body_jnt', 'upper_body_jnt', 'spine_ik_bind_001_crv', dr=4.5)    # bindSkin() ERR
-        cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
-        cmds.parentConstraint('spine_fk_009_jnt', 'upper_body_ctrl_grp', w=1, mo=True)
-        
-        
-        ## Leg
-        ik_handle = cmds.ikHandle(sj='leg_lf_ik_tight_jnt', ee='leg_lf_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'lf_ankle_ikHandle')
-        ik_handle = cmds.ikHandle(sj='leg_lf_ik_ankle_jnt', ee='leg_lf_ik_ball_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'lf_ankleToBall_ikHandle')
-        ik_handle = cmds.ikHandle(sj='leg_lf_ik_ball_jnt', ee='leg_lf_ik_toe_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'lf_ballToToe_ikHandle')
-        cmds.poleVectorConstraint('leg_lf_pv_ctrl', 'lf_ankle_ikHandle', w=1)
-        cmds.parent('lf_ankle_ikHandle', 'ankle_ik_lf_ctrl_jnt')
-        cmds.parent('lf_ankleToBall_ikHandle', 'ball_lift_ik_lf_ctrl_jnt')
-        cmds.parent('lf_ballToToe_ikHandle', 'toe_ik_lf_ctrl_jnt')
-        
-        ik_handle = cmds.ikHandle(sj='leg_rt_ik_tight_jnt', ee='leg_rt_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'rt_ankle_ikHandle')
-        ik_handle = cmds.ikHandle(sj='leg_rt_ik_ankle_jnt', ee='leg_rt_ik_ball_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'rt_ankleToBall_ikHandle')
-        ik_handle = cmds.ikHandle(sj='leg_rt_ik_ball_jnt', ee='leg_rt_ik_toe_jnt', sol='ikSCsolver', p=2, w=1)[0]
-        cmds.rename(ik_handle, 'rt_ballToToe_ikHandle')
-        cmds.poleVectorConstraint('leg_rt_pv_ctrl', 'rt_ankle_ikHandle', w=1)
-        cmds.parent('rt_ankle_ikHandle', 'ankle_ik_rt_ctrl_jnt')
-        cmds.parent('rt_ankleToBall_ikHandle', 'ball_lift_ik_rt_ctrl_jnt')
-        cmds.parent('rt_ballToToe_ikHandle', 'toe_ik_rt_ctrl_jnt')
-        
-        
-        # FK CTRLs Parent Constraint
-        ## Head
-        cmds.parentConstraint('head_001_jnt_ctrl', 'head_001_jnt', w=1, mo=True)
-        
-        ## Jaw
-        cmds.parentConstraint('jaw_001_jnt_ctrl', 'jaw_001_jnt', w=1, mo=True)
-        
-        ## Neck
-        cmds.parentConstraint('neck_001_jnt_ctrl', 'neck_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('neck_002_jnt_ctrl', 'neck_002_jnt', w=1, mo=True)
-        
-        ## Shoulder
-        cmds.parentConstraint('shoulder_lf_001_jnt_ctrl', 'shoulder_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('shoulder_rt_001_jnt_ctrl', 'shoulder_rt_001_jnt', w=1, mo=True)
-        
-        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_jnt_grp', w=1, mo=True)
-        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_jnt_grp', w=1, mo=True)
-        cmds.pointConstraint('shoulder_lf_002_jnt', 'arm_lf_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
-        cmds.pointConstraint('shoulder_rt_002_jnt', 'arm_rt_fk_shoulder_jnt_ctrl_grp', w=1, mo=True)
-        
-        ## Arm FK
-        cmds.parentConstraint('arm_lf_fk_shoulder_jnt_ctrl', 'arm_lf_fk_shoulder_jnt', w=1, mo=True)
-        cmds.parentConstraint('arm_lf_fk_elbow_jnt_ctrl', 'arm_lf_fk_elbow_jnt', w=1, mo=True)
-        cmds.parentConstraint('arm_lf_fk_wrist_jnt_ctrl', 'arm_lf_fk_wrist_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('arm_rt_fk_shoulder_jnt_ctrl', 'arm_rt_fk_shoulder_jnt', w=1, mo=True)
-        cmds.parentConstraint('arm_rt_fk_elbow_jnt_ctrl', 'arm_rt_fk_elbow_jnt', w=1, mo=True)
-        cmds.parentConstraint('arm_rt_fk_wrist_jnt_ctrl', 'arm_rt_fk_wrist_jnt', w=1, mo=True)
-        
-        ## Hand
-        cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'hand_lf_ctrl_grp', w=1, mo=True)
-        cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'hand_rt_ctrl_grp', w=1, mo=True)
-        
-        ## Left Hand
-        cmds.parentConstraint('thumb_lf_001_jnt_ctrl', 'thumb_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('thumb_lf_002_jnt_ctrl', 'thumb_lf_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('thumb_lf_003_jnt_ctrl', 'thumb_lf_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('index_lf_001_jnt_ctrl', 'index_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('index_lf_002_jnt_ctrl', 'index_lf_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('index_lf_003_jnt_ctrl', 'index_lf_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('middle_lf_001_jnt_ctrl', 'middle_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('middle_lf_002_jnt_ctrl', 'middle_lf_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('middle_lf_003_jnt_ctrl', 'middle_lf_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('ring_lf_001_jnt_ctrl', 'ring_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('ring_lf_002_jnt_ctrl', 'ring_lf_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('ring_lf_003_jnt_ctrl', 'ring_lf_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('pinky_lf_001_jnt_ctrl', 'pinky_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('pinky_lf_002_jnt_ctrl', 'pinky_lf_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('pinky_lf_003_jnt_ctrl', 'pinky_lf_003_jnt', w=1, mo=True)
-        
-        ## Right Hand
-        cmds.parentConstraint('thumb_rt_001_jnt_ctrl', 'thumb_rt_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('thumb_rt_002_jnt_ctrl', 'thumb_rt_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('thumb_rt_003_jnt_ctrl', 'thumb_rt_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('index_rt_001_jnt_ctrl', 'index_rt_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('index_rt_002_jnt_ctrl', 'index_rt_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('index_rt_003_jnt_ctrl', 'index_rt_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('middle_rt_001_jnt_ctrl', 'middle_rt_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('middle_rt_002_jnt_ctrl', 'middle_rt_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('middle_rt_003_jnt_ctrl', 'middle_rt_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('ring_rt_001_jnt_ctrl', 'ring_rt_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('ring_rt_002_jnt_ctrl', 'ring_rt_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('ring_rt_003_jnt_ctrl', 'ring_rt_003_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('pinky_rt_001_jnt_ctrl', 'pinky_rt_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('pinky_rt_002_jnt_ctrl', 'pinky_rt_002_jnt', w=1, mo=True)
-        cmds.parentConstraint('pinky_rt_003_jnt_ctrl', 'pinky_rt_003_jnt', w=1, mo=True)
-        
-        ## Pelvis
-        cmds.parentConstraint('pelvis_lf_001_jnt_ctrl', 'pelvis_lf_001_jnt', w=1, mo=True)
-        cmds.parentConstraint('pelvis_rt_001_jnt_ctrl', 'pelvis_rt_001_jnt', w=1, mo=True)
-        
-        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_jnt_grp', w=1, mo=True)
-        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_jnt_grp', w=1, mo=True)
-        cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
-        cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
-        
-        ## Leg
-        cmds.parentConstraint('leg_lf_fk_tight_jnt_ctrl', 'leg_lf_fk_tight_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_lf_fk_shin_jnt_ctrl', 'leg_lf_fk_shin_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_lf_fk_ankle_jnt_ctrl', 'leg_lf_fk_ankle_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_lf_fk_ball_jnt_ctrl', 'leg_lf_fk_ball_jnt', w=1, mo=True)
-        
-        cmds.parentConstraint('leg_rt_fk_tight_jnt_ctrl', 'leg_rt_fk_tight_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_rt_fk_shin_jnt_ctrl', 'leg_rt_fk_shin_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_rt_fk_ankle_jnt_ctrl', 'leg_rt_fk_ankle_jnt', w=1, mo=True)
-        cmds.parentConstraint('leg_rt_fk_ball_jnt_ctrl', 'leg_rt_fk_ball_jnt', w=1, mo=True)
-        
-        ## Attach Switch to IK CTRL
+        # Attach Switch to IK CTRL
         cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'arm_lf_switch', w=1, mo=True)
         cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'arm_rt_switch', w=1, mo=True)
         
         cmds.parentConstraint('leg_lf_bind_ankle_jnt', 'leg_lf_switch', w=1, mo=True)
         cmds.parentConstraint('leg_rt_bind_ankle_jnt', 'leg_rt_switch', w=1, mo=True)
         
+        # Hide ikHandles
+        cmds.select('*_ikHandle')
+        sel = cmds.ls(sl=True)
+        for s in sel:
+            cmds.setAttr(s+'.visibility', 0)
+        
         cmds.select(clear=True)
-    
+        
+        
     
     def import_weight(self, args):
         '''
