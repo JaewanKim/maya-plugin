@@ -10,13 +10,16 @@ class JWAutoRig():
             STEP 5. Import Weight
         
         Things to do :
+            - Arm PoleVector causes positional deviation of bone (CHECK ROTATAION VALUE)
             - Build (In progress)
                 - Set Attributes
+                    - Shoulder/Pelvis Rot
+                    - Finger
             - Import Weight (fileDialog2/fileBrowseDialog)
             - Layout
             - Refactoring
     '''
-        
+    
     def __init__(self):
         
         # Window
@@ -691,6 +694,8 @@ class JWAutoRig():
                 
                 cmds.rename('arm_lf_ik_elbow_jnt_ctrl', 'arm_lf_pv_ctrl')
                 cmds.rename('arm_rt_ik_elbow_jnt_ctrl', 'arm_rt_pv_ctrl')
+                cmds.rename('arm_lf_ik_elbow_jnt_ctrl_grp', 'arm_lf_pv_ctrl_grp')
+                cmds.rename('arm_rt_ik_elbow_jnt_ctrl_grp', 'arm_rt_pv_ctrl_grp')
             
             elif (obj == 'hand_jnt_grp'):
                 self.shape = 'SMALL_CIRCLE'
@@ -1399,14 +1404,19 @@ class JWAutoRig():
         cmds.xform(r=True, cp=True)
         cmds.spaceLocator(r=True, p=[-0.736, 0.181, 0.769], n='rt_R_bank_loc')
         cmds.xform(r=True, cp=True)
+        
         cmds.parent('foot_ik_rt_bank_grp', 'foot_rt_ik_ctrl')
         cmds.parent('rt_L_bank_loc', 'foot_rt_ik_ctrl')
         cmds.parent('rt_R_bank_loc', 'foot_rt_ik_ctrl')
         
+        cmds.parentConstraint('lf_L_bank_loc', 'foot_ik_lf_bank_grp', w=1, mo=True)
+        cmds.parentConstraint('lf_R_bank_loc', 'foot_ik_lf_bank_grp', w=1, mo=True)
+        cmds.parentConstraint('rt_L_bank_loc', 'foot_ik_rt_bank_grp', w=1, mo=True)
+        cmds.parentConstraint('rt_R_bank_loc', 'foot_ik_rt_bank_grp', w=1, mo=True)
+        
         cmds.setAttr('heel_ik_lf_ctrl_jnt.visibility', 0)
         cmds.setAttr('lf_L_bank_loc.visibility', 0)
         cmds.setAttr('lf_R_bank_loc.visibility', 0)
-        
         cmds.setAttr('heel_ik_rt_ctrl_jnt.visibility', 0)
         cmds.setAttr('rt_L_bank_loc.visibility', 0)
         cmds.setAttr('rt_R_bank_loc.visibility', 0)
@@ -1427,7 +1437,304 @@ class JWAutoRig():
         
         cmds.select(clear=True)
         
+        # Set Driven Key
+        ## IK_FK Switch
+        ### Left Arm Switch
+        cmds.setAttr('arm_lf_switch.tx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.ty', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.tz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.rx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.ry', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.rz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.sx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.sy', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.sz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_lf_switch.v', l=True, k=False, cb=False)
         
+        cmds.select('arm_lf_switch')
+        cmds.addAttr(ln='IK_FK', at='double', min=0, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.IK_FK', 0, k=True)
+        cmds.addAttr(ln='Thumb_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Thumb_Curl', 0, k=True)
+        cmds.addAttr(ln='Index_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Index_Curl', 0, k=True)
+        cmds.addAttr(ln='Middle_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Middle_Curl', 0, k=True)
+        cmds.addAttr(ln='Ring_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Ring_Curl', 0, k=True)
+        cmds.addAttr(ln='Pinky_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Pinky_Curl', 0, k=True)
+        cmds.addAttr(ln='Spread', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_lf_switch.Spread', 0, k=True)
+        
+        cmds.setAttr('arm_lf_switch.IK_FK', 0)
+        cmds.setAttr('arm_lf_fk_shoulder_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('arm_lf_ik_wrist_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('arm_lf_pv_ctrl_grp.visibility', 1)
+        cmds.setDrivenKeyframe('arm_lf_pv_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_lf_ik_wrist_jnt_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_lf_fk_shoulder_jnt_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        cmds.setAttr('arm_lf_switch.IK_FK', 10)
+        cmds.setAttr('arm_lf_fk_shoulder_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('arm_lf_ik_wrist_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('arm_lf_pv_ctrl_grp.visibility', 0)
+        cmds.setDrivenKeyframe('arm_lf_pv_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_lf_ik_wrist_jnt_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_lf_fk_shoulder_jnt_ctrl_grp.visibility', cd='arm_lf_switch.IK_FK')
+        
+        cmds.setAttr('arm_lf_switch.IK_FK', 0)
+        
+        ### Right Arm Switch
+        cmds.setAttr('arm_rt_switch.tx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.ty', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.tz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.rx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.ry', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.rz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.sx', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.sy', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.sz', l=True, k=False, cb=False)
+        cmds.setAttr('arm_rt_switch.v', l=True, k=False, cb=False)
+        
+        cmds.select('arm_rt_switch')
+        cmds.addAttr(ln='IK_FK', at='double', min=0, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.IK_FK', 0, k=True)
+        cmds.addAttr(ln='Thumb_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Thumb_Curl', 0, k=True)
+        cmds.addAttr(ln='Index_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Index_Curl', 0, k=True)
+        cmds.addAttr(ln='Middle_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Middle_Curl', 0, k=True)
+        cmds.addAttr(ln='Ring_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Ring_Curl', 0, k=True)
+        cmds.addAttr(ln='Pinky_Curl', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Pinky_Curl', 0, k=True)
+        cmds.addAttr(ln='Spread', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('arm_rt_switch.Spread', 0, k=True)
+        
+        cmds.setAttr('arm_rt_switch.IK_FK', 0)
+        cmds.setAttr('arm_rt_fk_shoulder_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('arm_rt_ik_wrist_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('arm_rt_pv_ctrl_grp.visibility', 1)
+        cmds.setDrivenKeyframe('arm_rt_pv_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_rt_ik_wrist_jnt_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_rt_fk_shoulder_jnt_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        cmds.setAttr('arm_rt_switch.IK_FK', 10)
+        cmds.setAttr('arm_rt_fk_shoulder_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('arm_rt_ik_wrist_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('arm_rt_pv_ctrl_grp.visibility', 0)
+        cmds.setDrivenKeyframe('arm_rt_pv_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_rt_ik_wrist_jnt_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('arm_rt_fk_shoulder_jnt_ctrl_grp.visibility', cd='arm_rt_switch.IK_FK')
+        
+        cmds.setAttr('arm_rt_switch.IK_FK', 0)
+        
+        ### Left Leg Switch 
+        cmds.setAttr('leg_lf_switch.tx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.ty', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.tz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.rx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.ry', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.rz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.sx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.sy', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.sz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_lf_switch.v', l=True, k=False, cb=False)
+        
+        cmds.select('leg_lf_switch')
+        cmds.addAttr(ln='IK_FK', at='double', min=0, max=10, dv=0)
+        cmds.setAttr('leg_lf_switch.IK_FK', 0, k=True)
+        
+        cmds.setAttr('foot_lf_ik_ctrl.tx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.ty', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.tz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.rx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.ry', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.rz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.sx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.sy', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.sz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_lf_ik_ctrl.v', l=True, k=False, cb=False)
+        
+        cmds.select('foot_lf_ik_ctrl')
+        cmds.addAttr(ln='Heel_Twist', at='double', dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Heel_Twist', 0, k=True)
+        cmds.addAttr(ln='Heel_Lift', at='double', dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Heel_Lift', 0, k=True)
+        cmds.addAttr(ln='Ball_Twist', at='double', dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Ball_Twist', 0, k=True)
+        cmds.addAttr(ln='Ball_Lift', at='double', dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Ball_Lift', 0, k=True)
+        cmds.addAttr(ln='Toe_Twist', at='double', dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Toe_Twist', 0, k=True)
+        cmds.addAttr(ln='Toe_Lift', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Toe_Lift', 0, k=True)
+        cmds.addAttr(ln='Bank', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('foot_lf_ik_ctrl.Bank', 0, k=True)
+        
+        cmds.setAttr('leg_lf_switch.IK_FK', 0)
+        cmds.setAttr('leg_lf_fk_tight_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('foot_lf_ik_ctrl_grp.visibility', 1)
+        cmds.setAttr('leg_lf_pv_ctrl_grp.visibility', 1)
+        cmds.setDrivenKeyframe('leg_lf_pv_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('foot_lf_ik_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('leg_lf_fk_tight_jnt_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        cmds.setAttr('leg_lf_switch.IK_FK', 10)
+        cmds.setAttr('leg_lf_fk_tight_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('foot_lf_ik_ctrl_grp.visibility', 0)
+        cmds.setAttr('leg_lf_pv_ctrl_grp.visibility', 0)
+        cmds.setDrivenKeyframe('leg_lf_pv_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('foot_lf_ik_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        cmds.setDrivenKeyframe('leg_lf_fk_tight_jnt_ctrl_grp.visibility', cd='leg_lf_switch.IK_FK')
+        
+        cmds.setAttr('leg_lf_switch.IK_FK', 0)
+        
+        ### Right Leg Switch 
+        cmds.setAttr('leg_rt_switch.tx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.ty', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.tz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.rx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.ry', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.rz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.sx', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.sy', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.sz', l=True, k=False, cb=False)
+        cmds.setAttr('leg_rt_switch.v', l=True, k=False, cb=False)
+        
+        cmds.select('leg_rt_switch')
+        cmds.addAttr(ln='IK_FK', at='double', min=0, max=10, dv=0)
+        cmds.setAttr('leg_rt_switch.IK_FK', 0, k=True)
+        
+        cmds.setAttr('foot_rt_ik_ctrl.tx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.ty', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.tz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.rx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.ry', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.rz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.sx', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.sy', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.sz', l=True, k=False, cb=False)
+        cmds.setAttr('foot_rt_ik_ctrl.v', l=True, k=False, cb=False)
+        
+        cmds.select('foot_rt_ik_ctrl')
+        cmds.addAttr(ln='Heel_Twist', at='double', dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Heel_Twist', 0, k=True)
+        cmds.addAttr(ln='Heel_Lift', at='double', dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Heel_Lift', 0, k=True)
+        cmds.addAttr(ln='Ball_Twist', at='double', dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Ball_Twist', 0, k=True)
+        cmds.addAttr(ln='Ball_Lift', at='double', dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Ball_Lift', 0, k=True)
+        cmds.addAttr(ln='Toe_Twist', at='double', dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Toe_Twist', 0, k=True)
+        cmds.addAttr(ln='Toe_Lift', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Toe_Lift', 0, k=True)
+        cmds.addAttr(ln='Bank', at='double', min=-10, max=10, dv=0)
+        cmds.setAttr('foot_rt_ik_ctrl.Bank', 0, k=True)
+        
+        cmds.setAttr('leg_rt_switch.IK_FK', 0)
+        cmds.setAttr('leg_rt_fk_tight_jnt_ctrl_grp.visibility', 0)
+        cmds.setAttr('foot_rt_ik_ctrl_grp.visibility', 1)
+        cmds.setAttr('leg_rt_pv_ctrl_grp.visibility', 1)
+        cmds.setDrivenKeyframe('leg_rt_pv_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('foot_rt_ik_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('leg_rt_fk_tight_jnt_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        cmds.setAttr('leg_rt_switch.IK_FK', 10)
+        cmds.setAttr('leg_rt_fk_tight_jnt_ctrl_grp.visibility', 1)
+        cmds.setAttr('foot_rt_ik_ctrl_grp.visibility', 0)
+        cmds.setAttr('leg_rt_pv_ctrl_grp.visibility', 0)
+        cmds.setDrivenKeyframe('leg_rt_pv_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('foot_rt_ik_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        cmds.setDrivenKeyframe('leg_rt_fk_tight_jnt_ctrl_grp.visibility', cd='leg_rt_switch.IK_FK')
+        
+        cmds.setAttr('leg_rt_switch.IK_FK', 0)
+        
+        ## Foot Attribute
+        ### Left Foot Attribute
+        cmds.select('foot_lf_ik_ctrl')
+        cmds.connectAttr('foot_lf_ik_ctrl.Heel_Twist', 'heel_ik_lf_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_lf_ik_ctrl.Heel_Lift', 'heel_ik_lf_ctrl_jnt.rotateX')
+        cmds.connectAttr('foot_lf_ik_ctrl.Ball_Twist', 'ball_twist_ik_lf_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_lf_ik_ctrl.Ball_Lift', 'ball_lift_ik_lf_ctrl_jnt.rotateX')
+        cmds.connectAttr('foot_lf_ik_ctrl.Toe_Twist', 'toe_ik_lf_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_lf_ik_ctrl.Toe_Lift', 'lf_ballToToe_ikHandle.translateZ')
+        ###
+        cmds.setAttr('foot_lf_ik_ctrl.Bank', 0)
+        cmds.setAttr('lf_L_bank_loc.rotateZ', 0)
+        cmds.setAttr('lf_R_bank_loc.rotateZ', 0)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', 0)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', 0)
+        cmds.setDrivenKeyframe('lf_L_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('lf_R_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', cd='foot_lf_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_lf_ik_ctrl.Bank', 10)
+        cmds.setAttr('lf_L_bank_loc.rotateZ', -90)
+        cmds.setAttr('lf_R_bank_loc.rotateZ', 0)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', 1)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', 0)
+        cmds.setDrivenKeyframe('lf_L_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('lf_R_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', cd='foot_lf_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_lf_ik_ctrl.Bank', -10)
+        cmds.setAttr('lf_L_bank_loc.rotateZ', 0)
+        cmds.setAttr('lf_R_bank_loc.rotateZ', 90)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', 0)
+        cmds.setAttr('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', 1)
+        cmds.setDrivenKeyframe('lf_L_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('lf_R_bank_loc.rotateZ', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_L_bank_locW0', cd='foot_lf_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_lf_bank_grp_parentConstraint1.lf_R_bank_locW1', cd='foot_lf_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_lf_ik_ctrl.Bank', 0)
+        
+        ## Foot Attribute
+        ### Right Foot Attribute
+        cmds.select('foot_rt_ik_ctrl')
+        cmds.connectAttr('foot_rt_ik_ctrl.Heel_Twist', 'heel_ik_rt_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_rt_ik_ctrl.Heel_Lift', 'heel_ik_rt_ctrl_jnt.rotateX')
+        cmds.connectAttr('foot_rt_ik_ctrl.Ball_Twist', 'ball_twist_ik_rt_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_rt_ik_ctrl.Ball_Lift', 'ball_lift_ik_rt_ctrl_jnt.rotateX')
+        cmds.connectAttr('foot_rt_ik_ctrl.Toe_Twist', 'toe_ik_rt_ctrl_jnt.rotateZ')
+        cmds.connectAttr('foot_rt_ik_ctrl.Toe_Lift', 'rt_ballToToe_ikHandle.translateZ')
+        ###
+        cmds.setAttr('foot_rt_ik_ctrl.Bank', 0)
+        cmds.setAttr('rt_L_bank_loc.rotateZ', 0)
+        cmds.setAttr('rt_R_bank_loc.rotateZ', 0)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', 0)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', 0)
+        cmds.setDrivenKeyframe('rt_L_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('rt_R_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', cd='foot_rt_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_rt_ik_ctrl.Bank', 10)
+        cmds.setAttr('rt_L_bank_loc.rotateZ', 90)
+        cmds.setAttr('rt_R_bank_loc.rotateZ', 0)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', 1)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', 0)
+        cmds.setDrivenKeyframe('rt_L_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('rt_R_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', cd='foot_rt_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_rt_ik_ctrl.Bank', -10)
+        cmds.setAttr('rt_L_bank_loc.rotateZ', 0)
+        cmds.setAttr('rt_R_bank_loc.rotateZ', -90)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', 0)
+        cmds.setAttr('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', 1)
+        cmds.setDrivenKeyframe('rt_L_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('rt_R_bank_loc.rotateZ', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_L_bank_locW0', cd='foot_rt_ik_ctrl.Bank')
+        cmds.setDrivenKeyframe('foot_ik_rt_bank_grp_parentConstraint1.rt_R_bank_locW1', cd='foot_rt_ik_ctrl.Bank')
+        
+        cmds.setAttr('foot_rt_ik_ctrl.Bank', 0)
+        
+        cmds.select(clear=True)
+    
     
     def import_weight(self, args):
         '''
