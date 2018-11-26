@@ -1,81 +1,81 @@
 import maya.cmds as cmds
 
-class BipadAutoRig()
+class BipadAutoRig():
     '''
-        Description  Bipad_AutoRig.py made by JW
+        Description : Bipad_AutoRig.py made by JW
             STEP 1. Create Joints
             STEP 2. Check Joint Orientation
             STEP 3. Create Controllers
             STEP 4. Build
             STEP 5. Import Weight
         
-        Doing 
+        Doing :
             - Layout
             - Refactoring
         
-        Things to do 
+        Things to do :
             - arm PoleVector causes positional deviation of bone (CHECK ROTATAION VALUE)
             - Build (In progress)
                 - Head, Jaw, Neck Constrain
                 - Root Constrain
                 - Set Attributes
-                    - ShoulderPelvis Rot
+                    - Shoulder/Pelvis Rot
                     - Wrist Rot
-            - Import Weight (fileDialog2fileBrowseDialog)
+            - Import Weight (fileDialog2/fileBrowseDialog)
     '''
     
-    def __init__(self)
+    def __init__(self):
         
         # Window
-        if (cmds.window(Bipad_AutoRig, exists=True))
-            cmds.deleteUI(Bipad_AutoRig, window=True)
+        if (cmds.window("Bipad_AutoRig", exists=True)):
+            cmds.deleteUI("Bipad_AutoRig", window=True)
         
-        self.win = cmds.window(Bipad_AutoRig, title=Bipad_AutoRig, sizeable=True, resizeToFitChildren=True, menuBar=True)
+        self.win = cmds.window("Bipad_AutoRig", title="Bipad_AutoRig", sizeable=True, resizeToFitChildren=True, menuBar=True)
         
         # Menu Bar
-        fileMenu = cmds.menu(label=Edit)
-        saveOption = cmds.menuItem(label=Save Settings, enable=False)
-        resetOption = cmds.menuItem(label=Reset Settings, enable=False)
+        fileMenu = cmds.menu(label="Edit")
+        saveOption = cmds.menuItem(label="Save Settings", enable=False)
+        resetOption = cmds.menuItem(label="Reset Settings", enable=False)
         
-        helpMenu = cmds.menu(label=Help)
-        helpOption = cmds.menuItem(label=Help on JWAutoRig.py, command=self.showHelp)
-        cmds.setParent(..)
+        helpMenu = cmds.menu(label="Help")
+        helpOption = cmds.menuItem(label="Help on JWAutoRig.py", command=self.showHelp)
+        cmds.setParent("..")
         
         # Button Group
         cmds.rowColumnLayout()
         cmds.separator(h=5, style='single', hr=True)
         
-        cmds.button(label=STEP 1 Create Dummy Joint, command=self.dummy_jnt)
-        cmds.text(Please adjust dummy joint)
+        cmds.button(label="STEP 1: Create Dummy Joint", command=self.dummy_jnt)
+        cmds.text("Please adjust dummy joint")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label=Check Joint Orientation, command=self.confirm_orient_joint)
-        cmds.text(Toggle All Joint)
+        cmds.button(label="Check Joint Orientation", command=self.confirm_orient_joint)
+        cmds.text("Toggle All Joint")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label=STEP 2 Fix the Joint, command=self.fix_jnt)
-        cmds.text(Generate IK,FK,BIND joint referred to dummy joint)
+        cmds.button(label="STEP 2: Fix the Joint", command=self.fix_jnt)
+        cmds.text("Generate IK,FK,BIND joint referred to dummy joint")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label=Create Controllers, command=self.create_ctrl)
-        cmds.text( )
+        cmds.button(label="Create Controllers", command=self.create_ctrl)
+        cmds.text(" ")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label=Build, command=self.build)
-        cmds.text( )
+        cmds.button(label="Build", command=self.build)
+        cmds.text(" ")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label=Import Skin Weight, en=False, command=self.import_weight)
-        cmds.text( )
+        cmds.button(label="Import Skin Weight", en=False, command=self.import_weight)
+        cmds.text(" ")
         cmds.separator(h=10, style='none', hr=True)
         
         cmds.separator(h=5, style='single', hr=True)
-        cmds.setParent(..)
+        cmds.setParent("..")
         
         cmds.showWindow(self.win)
     
     
-    def dummy_jnt(self, args)
+    def dummy_jnt(self, args):
         '''
             STEP 1. Create Dummy Joint
             # Please adjust dummy joint
@@ -84,7 +84,7 @@ class BipadAutoRig()
         cmds.select(clear=True)
         
         # Head Joint
-        head_jnt_grp = cmds.group(empty=True, n=head_jnt_grp)
+        head_jnt_grp = cmds.group(empty=True, n="head_jnt_grp")
         cmds.move(0, 14.447, -0.066, head_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -98,7 +98,7 @@ class BipadAutoRig()
         
         
         # Jaw Joint
-        jaw_jnt_grp = cmds.group(empty=True, n=jaw_jnt_grp)
+        jaw_jnt_grp = cmds.group(empty=True, n="jaw_jnt_grp")
         cmds.move(0, 14.447, -0.066, jaw_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -112,7 +112,7 @@ class BipadAutoRig()
         
         
         # Neck Joint
-        neck_jnt_grp = cmds.group(empty=True, n=neck_jnt_grp)
+        neck_jnt_grp = cmds.group(empty=True, n="neck_jnt_grp")
         cmds.move(0, 13.322, -0.366, neck_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -128,7 +128,7 @@ class BipadAutoRig()
         
         
         # Left Shoulder Joint
-        shoulder_jnt_grp = cmds.group(empty=True, n=shoulder_jnt_grp)
+        shoulder_jnt_grp = cmds.group(empty=True, n="shoulder_jnt_grp")
         cmds.move(0, 12.965, -0.251, shoulder_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -142,7 +142,7 @@ class BipadAutoRig()
         
         
         # Left Arm Joint
-        arm_jnt_grp = cmds.group(empty=True, n=arm_jnt_grp)
+        arm_jnt_grp = cmds.group(empty=True, n="arm_jnt_grp")
         cmds.move(0, 13.093, -0.504, arm_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -161,7 +161,7 @@ class BipadAutoRig()
         
         # Left Hand Joint
         # Thumb
-        hand_jnt_grp = cmds.group(empty=True, n=hand_jnt_grp)
+        hand_jnt_grp = cmds.group(empty=True, n="hand_jnt_grp")
         cmds.move(0, 9.612, -0.458, hand_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -235,7 +235,7 @@ class BipadAutoRig()
         
         
         # Spine Joint
-        spine_jnt_grp = cmds.group(empty=True, n=spine_jnt_grp)
+        spine_jnt_grp = cmds.group(empty=True, n="spine_jnt_grp")
         cmds.move(0, 8.869, 0.316, spine_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -263,7 +263,7 @@ class BipadAutoRig()
         
         
         # Left Pelvis Joint
-        pelvis_jnt_grp = cmds.group(empty=True, n=pelvis_jnt_grp)
+        pelvis_jnt_grp = cmds.group(empty=True, n="pelvis_jnt_grp")
         cmds.move(0, 8.85, 0.266, pelvis_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
@@ -272,12 +272,12 @@ class BipadAutoRig()
         cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
         
         cmds.select('pelvis_lf_001_jnt', hi=True)
-        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
+        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
         cmds.select(clear=True)
         
         
         # Left Leg Joint
-        leg_jnt_grp = cmds.group(empty=True, n=leg_jnt_grp)
+        leg_jnt_grp = cmds.group(empty=True, n="leg_jnt_grp")
         cmds.move(0, 8.495, 0.266, leg_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.joint(a=True, p=[0.967, 8.495, 0.266], rad=0.6, n='leg_lf_ik_tight_jnt')
@@ -308,6 +308,10 @@ class BipadAutoRig()
         cmds.mirrorJoint('pinky_lf_001_jnt', myz=True, mb=True, sr=('lf', 'rt'))
         cmds.select(clear=True)
         
+        cmds.select('pelvis_rt_001_jnt', hi=True)
+        cmds.joint(e=True, oj='yzx', sao='zdown', ch=True, zso=True)
+        cmds.select(clear=True)
+        '''
         cmds.select('shoulder_rt_001_jnt', hi=True)
         cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
         cmds.select('arm_rt_ik_shoulder_jnt', hi=True)
@@ -325,29 +329,30 @@ class BipadAutoRig()
         cmds.select('pelvis_rt_001_jnt', hi=True)
         cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
         cmds.select(clear=True)
+        '''
         
         # Make up the Joint Groups
-        shoulder_lf_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n=shoulder_lf_jnt_grp)
+        shoulder_lf_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n="shoulder_lf_jnt_grp")
         cmds.move(0.232, 12.965, -0.251, shoulder_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('shoulder_lf_001_jnt', shoulder_lf_jnt_grp)
         
-        shoulder_rt_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n=shoulder_rt_jnt_grp)
+        shoulder_rt_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n="shoulder_rt_jnt_grp")
         cmds.move(-0.232, 12.965, -0.251, shoulder_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('shoulder_rt_001_jnt', shoulder_rt_jnt_grp)
         
-        arm_lf_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n=arm_lf_jnt_grp)
+        arm_lf_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_lf_jnt_grp")
         cmds.move(1.135, 13.093, -0.504, arm_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('arm_lf_ik_shoulder_jnt', arm_lf_jnt_grp)
         
-        arm_rt_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n=arm_rt_jnt_grp)
+        arm_rt_jnt_grp = cmds.group(empty=True, parent='arm_jnt_grp', n="arm_rt_jnt_grp")
         cmds.move(-1.135, 13.093, -0.504, arm_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('arm_rt_ik_shoulder_jnt', arm_rt_jnt_grp)
         
-        hand_lf_jnt_grp = cmds.group(empty=True, parent='hand_jnt_grp', n=hand_lf_jnt_grp)
+        hand_lf_jnt_grp = cmds.group(empty=True, parent='hand_jnt_grp', n="hand_lf_jnt_grp")
         cmds.move(4.556, 9.612, -0.458, hand_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('thumb_lf_001_jnt', hand_lf_jnt_grp)
@@ -356,7 +361,7 @@ class BipadAutoRig()
         cmds.parent('ring_lf_001_jnt', hand_lf_jnt_grp)
         cmds.parent('pinky_lf_001_jnt', hand_lf_jnt_grp)
         
-        hand_rt_jnt_grp = cmds.group(empty=True, parent='hand_jnt_grp', n=hand_rt_jnt_grp)
+        hand_rt_jnt_grp = cmds.group(empty=True, parent='hand_jnt_grp', n="hand_rt_jnt_grp")
         cmds.move(-4.556, 9.612, -0.458, hand_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('thumb_rt_001_jnt', hand_rt_jnt_grp)
@@ -365,29 +370,29 @@ class BipadAutoRig()
         cmds.parent('ring_rt_001_jnt', hand_rt_jnt_grp)
         cmds.parent('pinky_rt_001_jnt', hand_rt_jnt_grp)
         
-        pelvis_lf_jnt_grp = cmds.group(empty=True, parent='pelvis_jnt_grp', n=pelvis_lf_jnt_grp)
+        pelvis_lf_jnt_grp = cmds.group(empty=True, parent='pelvis_jnt_grp', n="pelvis_lf_jnt_grp")
         cmds.move(0.181, 8.85, 0.266, pelvis_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('pelvis_lf_001_jnt', pelvis_lf_jnt_grp)
         
-        pelvis_rt_jnt_grp = cmds.group(empty=True, parent='pelvis_jnt_grp', n=pelvis_rt_jnt_grp)
+        pelvis_rt_jnt_grp = cmds.group(empty=True, parent='pelvis_jnt_grp', n="pelvis_rt_jnt_grp")
         cmds.move(-0.181, 8.85, 0.266, pelvis_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('pelvis_rt_001_jnt', pelvis_rt_jnt_grp)
         
-        leg_lf_jnt_grp = cmds.group(empty=True, parent='leg_jnt_grp', n=leg_lf_jnt_grp)
+        leg_lf_jnt_grp = cmds.group(empty=True, parent='leg_jnt_grp', n="leg_lf_jnt_grp")
         cmds.move(0.967, 8.495, 0.266, leg_lf_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('leg_lf_ik_tight_jnt', leg_lf_jnt_grp)
         
-        leg_rt_jnt_grp = cmds.group(empty=True, parent='leg_jnt_grp', n=leg_rt_jnt_grp)
+        leg_rt_jnt_grp = cmds.group(empty=True, parent='leg_jnt_grp', n="leg_rt_jnt_grp")
         cmds.move(-0.967, 8.495, 0.266, leg_rt_jnt_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('leg_rt_ik_tight_jnt', leg_rt_jnt_grp)
         
         cmds.select(clear=True)
         
-        jnt_grp = cmds.group(empty=True, n=jnt_grp)
+        jnt_grp = cmds.group(empty=True, n="jnt_grp")
         cmds.parent(head_jnt_grp, jnt_grp)
         cmds.parent(jaw_jnt_grp, jnt_grp)
         cmds.parent(neck_jnt_grp, jnt_grp)
@@ -398,14 +403,14 @@ class BipadAutoRig()
         cmds.parent(pelvis_jnt_grp, jnt_grp)
         cmds.parent(leg_jnt_grp, jnt_grp)
         
-        ch_grp = cmds.group(empty=True, n=ch_grp)
+        ch_grp = cmds.group(empty=True, n="ch_grp")
         cmds.parent(jnt_grp, ch_grp)
         
-        
+        # Change name with 'dummy_'
         cmds.select(ch_grp, hi=True)
         sel = cmds.ls(sl=True)
         
-        for s in sel
+        for s in sel:
             name = 'dummy_' + str(s)
             cmds.rename(s, name)
         
@@ -423,48 +428,58 @@ class BipadAutoRig()
         cmds.pointConstraint('dummy_pelvis_lf_002_jnt', 'dummy_leg_lf_ik_tight_jnt', w=1, mo=True)
         cmds.pointConstraint('dummy_pelvis_rt_002_jnt', 'dummy_leg_rt_ik_tight_jnt', w=1, mo=True)
         
+        self.color = 'PURPLE'
+        cmds.select('dummy_*jnt')
+        self.coloring_ctrl(self)
         
-    def confirm_orient_joint(self, args)
+        
+    def confirm_orient_joint(self, args):
         '''
-            STEP 1-1 Check Joint Orientation
+            STEP 1-1: Check Joint Orientation
         '''
         
         cmds.select(all=True, hi=True)
         selectedObjs = cmds.ls(sl=True)
         
-        for obj in selectedObjs
-            if (cmds.objectType(obj) == 'joint')
+        for obj in selectedObjs:
+            if (cmds.objectType(obj) == 'joint'):
                 cmds.toggle(obj, localAxis=True)
         
         cmds.select(clear=True)
         
         
-        
-    def fix_jnt(self, args)
+    def fix_jnt(self, args):
         '''
-            STEP 2 Fix the Joint
+            STEP 2: Fix the Joint
             # Generate IK,FK,BIND joint referred to dummy joint
         '''
         
         cmds.select(clear=True)
         
-        cmds.duplicate('dummy_ch_grp')
+        cmds.duplicate('dummy_ch_grp', st=True, rc=True)
         
         cmds.select('dummy_ch_grp1', hi=True)
         sel = cmds.ls(sl=True)
-        print sel
         
-        for s in sel
-            print s
-            old_name = s
-            new_name = s.replace('dummy_', '')
-            cmds.rename(old_name, new_name)
+        for s in sel:
+            name = s.replace('dummy_', '')
+            name = name[:len(name)-1]        # slice last number
+            cmds.rename(s, name)
+        
+        cmds.delete('*Constraint')
+        cmds.hide('dummy_ch_grp')
+        
+        self.color = 'DEFAULT'
+        cmds.select('*jnt')
+        cmds.select('dummy*jnt', d=True)
+        self.coloring_ctrl(self)
+        
+        cmds.select(cl=True)
         
         
-        
-    def create_ctrl(self, args)
+    def create_ctrl(self, args):
         '''
-            STEP 3 Create Controllers
+            STEP 3: Create Controllers
         '''
         
         # Select hirarchy of jnt_grp 
@@ -476,51 +491,51 @@ class BipadAutoRig()
         jointGrps = []
         selectedJnts = []
         
-        for grps in selectedGrps    	# Save jnt_grp & bodypart_grp in jointGrps
-            if (cmds.objectType(grps) == 'transform')
+        for grps in selectedGrps:       # Save jnt_grp & bodypart_grp in jointGrps
+            if (cmds.objectType(grps) == 'transform'):
                 jointGrps.append(grps)
         
-        for idx in range(1, len(jointGrps))    # Acces to bodypart_grp in order except jnt_grp 
+        for idx in range(1, len(jointGrps)):    # Acces to bodypart_grp in order except jnt_grp 
             obj = jointGrps[idx]
             
             # Create Controllers by site
-            if (obj == 'head_jnt_grp')
+            if (obj == 'head_jnt_grp'):
                 self.shape = 'HEAD'
                 
                 cmds.select('head_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
                 
-                head_ctrl_grp = cmds.group(empty=True, n=head_ctrl_grp)
+                head_ctrl_grp = cmds.group(empty=True, n="head_ctrl_grp")
                 cmds.move(0, 14.447, -0.066, head_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 cmds.parent('head_001_jnt_ctrl_grp', head_ctrl_grp)
             
-            elif (obj == 'jaw_jnt_grp')
+            elif (obj == 'jaw_jnt_grp'):
                 self.shape = 'JAW'
                 
                 cmds.select('jaw_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
                 
-                jaw_ctrl_grp = cmds.group(empty=True, n=jaw_ctrl_grp)
+                jaw_ctrl_grp = cmds.group(empty=True, n="jaw_ctrl_grp")
                 cmds.move(0, 14.447, -0.066, jaw_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 cmds.parent('jaw_001_jnt_ctrl_grp', jaw_ctrl_grp)
             
-            elif (obj == 'neck_jnt_grp')
+            elif (obj == 'neck_jnt_grp'):
                 self.shape = 'NECK'
                 
                 cmds.select('neck_001_jnt', hi=True)
                 self.ctrl_gen(self)
                 
-                neck_ctrl_grp = cmds.group(empty=True, n=neck_ctrl_grp)
+                neck_ctrl_grp = cmds.group(empty=True, n="neck_ctrl_grp")
                 cmds.move(0, 13.322, -0.366, neck_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 cmds.parent('neck_001_jnt_ctrl_grp', neck_ctrl_grp)
             
-            elif (obj == 'shoulder_jnt_grp')
+            elif (obj == 'shoulder_jnt_grp'):
                 self.shape = 'SHOULDER'
                 
                 cmds.select('shoulder_lf_001_jnt', hi=True)
@@ -528,22 +543,22 @@ class BipadAutoRig()
                 cmds.select('shoulder_rt_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
                 
-                shoulder_ctrl_grp = cmds.group(empty=True, n=shoulder_ctrl_grp)
+                shoulder_ctrl_grp = cmds.group(empty=True, n="shoulder_ctrl_grp")
                 cmds.move(0, 12.965, -0.251, shoulder_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                shoulder_lf_ctrl_grp = cmds.group(empty=True, p=shoulder_ctrl_grp, n=shoulder_lf_ctrl_grp)
+                shoulder_lf_ctrl_grp = cmds.group(empty=True, p="shoulder_ctrl_grp", n="shoulder_lf_ctrl_grp")
                 cmds.move(0.232, 12.965, -0.251, shoulder_lf_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                shoulder_rt_ctrl_grp = cmds.group(empty=True, p=shoulder_ctrl_grp, n=shoulder_rt_ctrl_grp)
+                shoulder_rt_ctrl_grp = cmds.group(empty=True, p="shoulder_ctrl_grp", n="shoulder_rt_ctrl_grp")
                 cmds.move(-0.232, 12.965, -0.251, shoulder_rt_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 cmds.parent('shoulder_lf_001_jnt_ctrl_grp', shoulder_lf_ctrl_grp)
                 cmds.parent('shoulder_rt_001_jnt_ctrl_grp', shoulder_rt_ctrl_grp)
             
-            elif (obj == 'arm_jnt_grp')
+            elif (obj == 'arm_jnt_grp'):
                 self.shape = 'SPHERE'
                 
                 cmds.select('arm_lf_ik_elbow_jnt', hi=True)
@@ -576,28 +591,28 @@ class BipadAutoRig()
                 cmds.select('arm_lf_switch', 'arm_rt_switch')
                 cmds.makeIdentity(apply=True, t=True, s=True)
                 
-                arm_switch_grp = cmds.group(empty=True, n=arm_switch_grp)
+                arm_switch_grp = cmds.group(empty=True, n="arm_switch_grp")
                 cmds.move(0, 9.612, -0.458, arm_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                arm_lf_switch_grp = cmds.group(empty=True, p=arm_switch_grp, n=arm_lf_switch_grp)
+                arm_lf_switch_grp = cmds.group(empty=True, p="arm_switch_grp", n="arm_lf_switch_grp")
                 cmds.move(4.556, 9.612, -0.458, arm_lf_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                arm_rt_switch_grp = cmds.group(empty=True, p=arm_switch_grp, n=arm_rt_switch_grp)
+                arm_rt_switch_grp = cmds.group(empty=True, p="arm_switch_grp", n="arm_rt_switch_grp")
                 cmds.move(-4.556, 9.612, -0.458, arm_rt_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 cmds.parent('arm_lf_switch', 'arm_lf_switch_grp')
                 cmds.parent('arm_rt_switch', 'arm_rt_switch_grp')
                 #
                 
-                arm_ctrl_grp = cmds.group(empty=True, n=arm_ctrl_grp)
+                arm_ctrl_grp = cmds.group(empty=True, n="arm_ctrl_grp")
                 cmds.move(0, 13.093, -0.504, arm_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                arm_lf_ctrl_grp = cmds.group(empty=True, p=arm_ctrl_grp, n=arm_lf_ctrl_grp)
+                arm_lf_ctrl_grp = cmds.group(empty=True, p="arm_ctrl_grp", n="arm_lf_ctrl_grp")
                 cmds.move(1.135, 13.093, -0.504, arm_lf_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                arm_rt_ctrl_grp = cmds.group(empty=True, p=arm_ctrl_grp, n=arm_rt_ctrl_grp)
+                arm_rt_ctrl_grp = cmds.group(empty=True, p="arm_ctrl_grp", n="arm_rt_ctrl_grp")
                 cmds.move(-1.135, 13.093, -0.504, arm_rt_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
@@ -613,7 +628,7 @@ class BipadAutoRig()
                 cmds.rename('arm_lf_ik_elbow_jnt_ctrl_grp', 'arm_lf_pv_ctrl_grp')
                 cmds.rename('arm_rt_ik_elbow_jnt_ctrl_grp', 'arm_rt_pv_ctrl_grp')
             
-            elif (obj == 'hand_jnt_grp')
+            elif (obj == 'hand_jnt_grp'):
                 self.shape = 'SMALL_CIRCLE'
                 
                 cmds.select('thumb_lf_001_jnt', hi=True)
@@ -638,15 +653,15 @@ class BipadAutoRig()
                 cmds.select('pinky_rt_001_jnt', hi=True)
                 self.ctrl_gen(self)
                 
-                hand_ctrl_grp = cmds.group(empty=True, n=hand_ctrl_grp)
+                hand_ctrl_grp = cmds.group(empty=True, n="hand_ctrl_grp")
                 cmds.move(0, 9.612, -0.458, hand_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                hand_lf_ctrl_grp = cmds.group(empty=True, p=hand_ctrl_grp, n=hand_lf_ctrl_grp)
+                hand_lf_ctrl_grp = cmds.group(empty=True, p="hand_ctrl_grp", n="hand_lf_ctrl_grp")
                 cmds.move(4.556, 9.612, -0.458, hand_lf_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                hand_rt_ctrl_grp = cmds.group(empty=True, p=hand_ctrl_grp, n=hand_rt_ctrl_grp)
+                hand_rt_ctrl_grp = cmds.group(empty=True, p="hand_ctrl_grp", n="hand_rt_ctrl_grp")
                 cmds.move(-4.556, 9.612, -0.458, hand_rt_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
@@ -662,7 +677,7 @@ class BipadAutoRig()
                 cmds.parent('ring_rt_001_jnt_ctrl_grp', hand_rt_ctrl_grp)
                 cmds.parent('pinky_rt_001_jnt_ctrl_grp', hand_rt_ctrl_grp)
             
-            elif (obj == 'spine_jnt_grp')
+            elif (obj == 'spine_jnt_grp'):
                 self.shape = 'BODY'
                 cmds.select('spine_ik_bind_001_jnt', hi=True)
                 self.ctrl_gen(self)
@@ -675,7 +690,7 @@ class BipadAutoRig()
                 cmds.select('spine_fk_001_jnt', hi=True)
                 self.ctrl_gen(self)
                 
-                spine_ctrl_grp = cmds.group(empty=True, n=spine_ctrl_grp)
+                spine_ctrl_grp = cmds.group(empty=True, n="spine_ctrl_grp")
                 cmds.move(0, 8.869, 0.316, spine_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
@@ -693,9 +708,9 @@ class BipadAutoRig()
                 cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='upper_body_jnt')
                 cmds.parent('upper_body_jnt', 'upper_body_ctrl')
                 cmds.select('upper_body_ctrl')
-                cmds.move(0, 11.847, 0.188, .scalePivot, .rotatePivot, a=True)
+                cmds.move(0, 11.847, 0.188, ".scalePivot", ".rotatePivot", a=True)
             
-            elif (obj == 'pelvis_jnt_grp')
+            elif (obj == 'pelvis_jnt_grp'):
                 self.shape = 'PELVIS'
                 
                 cmds.select('pelvis_lf_001_jnt', hi=True)
@@ -703,22 +718,22 @@ class BipadAutoRig()
                 cmds.select('pelvis_rt_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
                 
-                pelvis_ctrl_grp = cmds.group(empty=True, n=pelvis_ctrl_grp)
+                pelvis_ctrl_grp = cmds.group(empty=True, n="pelvis_ctrl_grp")
                 cmds.move(0, 8.85, 0.266, pelvis_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                pelvis_lf_ctrl_grp = cmds.group(empty=True, p=pelvis_ctrl_grp, n=pelvis_lf_ctrl_grp)
+                pelvis_lf_ctrl_grp = cmds.group(empty=True, p="pelvis_ctrl_grp", n="pelvis_lf_ctrl_grp")
                 cmds.move(0.181, 8.85, 0.266, pelvis_lf_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                pelvis_rt_ctrl_grp = cmds.group(empty=True, p=pelvis_ctrl_grp, n=pelvis_rt_ctrl_grp)
+                pelvis_rt_ctrl_grp = cmds.group(empty=True, p="pelvis_ctrl_grp", n="pelvis_rt_ctrl_grp")
                 cmds.move(-0.181, 8.85, 0.266, pelvis_rt_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 cmds.parent('pelvis_lf_001_jnt_ctrl_grp', pelvis_lf_ctrl_grp)
                 cmds.parent('pelvis_rt_001_jnt_ctrl_grp', pelvis_rt_ctrl_grp)
             
-            elif (obj == 'leg_jnt_grp')
+            elif (obj == 'leg_jnt_grp'):
                 self.shape = 'SPHERE'
                 
                 cmds.select('leg_lf_ik_shin_jnt', hi=True)
@@ -757,35 +772,35 @@ class BipadAutoRig()
                 cmds.select('foot_lf_ik_ctrl', 'foot_rt_ik_ctrl')
                 cmds.makeIdentity(apply=True, t=True, s=True)
                 
-                leg_switch_grp = cmds.group(empty=True, n=leg_switch_grp)
+                leg_switch_grp = cmds.group(empty=True, n="leg_switch_grp")
                 cmds.move(0, 0.785, -0.193, leg_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                leg_lf_switch_grp = cmds.group(empty=True, p=leg_switch_grp, n=leg_lf_switch_grp)
+                leg_lf_switch_grp = cmds.group(empty=True, p="leg_switch_grp", n="leg_lf_switch_grp")
                 cmds.move(0.967, 0.785, -0.193, leg_lf_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                leg_rt_switch_grp = cmds.group(empty=True, p=leg_switch_grp, n=leg_rt_switch_grp)
+                leg_rt_switch_grp = cmds.group(empty=True, p="leg_switch_grp", n="leg_rt_switch_grp")
                 cmds.move(-0.967, 0.785, -0.193, leg_rt_switch_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 cmds.parent('leg_lf_switch', 'leg_lf_switch_grp')
                 cmds.parent('leg_rt_switch', 'leg_rt_switch_grp')
                 
-                leg_ctrl_grp = cmds.group(empty=True, n=leg_ctrl_grp)
+                leg_ctrl_grp = cmds.group(empty=True, n="leg_ctrl_grp")
                 cmds.move(0, 8.495, 0.266, leg_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                leg_lf_ctrl_grp = cmds.group(empty=True, p=leg_ctrl_grp, n=leg_lf_ctrl_grp)
+                leg_lf_ctrl_grp = cmds.group(empty=True, p="leg_ctrl_grp", n="leg_lf_ctrl_grp")
                 cmds.move(0.967, 8.495, 0.266, leg_lf_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                leg_rt_ctrl_grp = cmds.group(empty=True, p=leg_ctrl_grp, n=leg_rt_ctrl_grp)
+                leg_rt_ctrl_grp = cmds.group(empty=True, p="leg_ctrl_grp", n="leg_rt_ctrl_grp")
                 cmds.move(-0.967, 8.495, 0.266, leg_rt_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
-                foot_ctrl_grp = cmds.group(empty=True, n=foot_ctrl_grp)
+                foot_ctrl_grp = cmds.group(empty=True, n="foot_ctrl_grp")
                 cmds.move(0, 0.785, -0.193, foot_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                foot_lf_ik_ctrl_grp = cmds.group(empty=True, p=foot_ctrl_grp, n=foot_lf_ik_ctrl_grp)
+                foot_lf_ik_ctrl_grp = cmds.group(empty=True, p="foot_ctrl_grp", n="foot_lf_ik_ctrl_grp")
                 cmds.move(0.967, 0.785, -0.193, foot_lf_ik_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
-                foot_rt_ik_ctrl_grp = cmds.group(empty=True, p=foot_ctrl_grp, n=foot_rt_ik_ctrl_grp)
+                foot_rt_ik_ctrl_grp = cmds.group(empty=True, p="foot_ctrl_grp", n="foot_rt_ik_ctrl_grp")
                 cmds.move(-0.967, 0.785, -0.193, foot_rt_ik_ctrl_grp)
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 cmds.parent('foot_lf_ik_ctrl', 'foot_lf_ik_ctrl_grp')
@@ -804,7 +819,7 @@ class BipadAutoRig()
         # Eye CTRL
         
         # CTRL Grouping
-        ctrl_grp = cmds.group(empty=True, p=ch_grp, n=ctrl_grp)
+        ctrl_grp = cmds.group(empty=True, p="ch_grp", n="ctrl_grp")
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         
         cmds.parent(head_ctrl_grp, ctrl_grp)
@@ -823,23 +838,23 @@ class BipadAutoRig()
         
         # CTRL Coloring
         self.color = 'WHITE'
-        cmds.select('_001_jnt_ctrl', '_fk__ctrl')
+        cmds.select('*_001_jnt_ctrl', '*_fk_*_ctrl')
         self.coloring_ctrl(self)
         
         self.color = 'YELLOW'
-        cmds.select('_pv_ctrl', '_ik_ctrl')
+        cmds.select('*_pv_ctrl', '*_ik*_ctrl')
         self.coloring_ctrl(self)
         
         self.color = 'PINK'
-        cmds.select('_switch')
+        cmds.select('*_switch')
         self.coloring_ctrl(self)
         
         self.color = 'SKYBLUE'
-        cmds.select('_body_ctrl')
+        cmds.select('*_body_ctrl')
         self.coloring_ctrl(self)
     
     # Generate CTRL
-    def ctrl_gen(self, args)
+    def ctrl_gen(self, args):
         
         selectedObjs = cmds.ls(sl=True)
         
@@ -848,44 +863,44 @@ class BipadAutoRig()
         jntAngleSum = [0,0,0]
         ctrl_list = []
         
-        for idx in range(0, len(selectedObjs)-1)    # Except Tip of Joint
+        for idx in range(0, len(selectedObjs)-1):    # Except Tip of Joint
             
             jntPosition = cmds.joint(selectedObjs[idx], q=True, p=True)
             jntAngle = cmds.joint(selectedObjs[idx], q=True, o=True)
-            for jdx in range(0, 3)
+            for jdx in range(0, 3):
                 jntAngleSum[jdx] = jntAngleSum[jdx] + jntAngle[jdx]
             ctrl_name = selectedObjs[idx] + '_ctrl'
             ctrl_grp_name = ctrl_name +'_grp'
             
-            if (self.shape == 'HEAD')
+            if (self.shape == 'HEAD'):
                 ctrl = self.head_ctrl(self)
-            elif(self.shape == 'JAW')
+            elif(self.shape == 'JAW'):
                 ctrl = self.jaw_ctrl(self)
-            elif(self.shape == 'NECK')
+            elif(self.shape == 'NECK'):
                 ctrl = self.neck_ctrl(self)
-            elif(self.shape == 'SHOULDER')
+            elif(self.shape == 'SHOULDER'):
                 ctrl = self.shoulder_ctrl(self)
-            elif(self.shape == 'ARM')
+            elif(self.shape == 'ARM'):
                 ctrl = self.circle_ctrl(self)
-            elif(self.shape == 'BODY')
+            elif(self.shape == 'BODY'):
                 ctrl = self.body_ctrl(self)
-            elif(self.shape == 'PELVIS')
+            elif(self.shape == 'PELVIS'):
                 ctrl = self.pelvis_ctrl(self)
-            elif (self.shape == 'CIRCLE')
+            elif (self.shape == 'CIRCLE'):
                 ctrl = self.circle_ctrl(self)
-            elif (self.shape == 'MIDDLE_CIRCLE')
+            elif (self.shape == 'MIDDLE_CIRCLE'):
                 ctrl = self.middle_circle_ctrl(self)
-            elif (self.shape == 'SMALL_CIRCLE')
+            elif (self.shape == 'SMALL_CIRCLE'):
                 ctrl = self.small_circle_ctrl(self)
-            elif (self.shape == 'CURVED_CIRCLE')
+            elif (self.shape == 'CURVED_CIRCLE'):
                 ctrl = self.curved_circle_ctrl(self)
-            elif (self.shape == 'SQUARE')
+            elif (self.shape == 'SQUARE'):
                 ctrl = self.square_ctrl(self)
-            elif (self.shape == 'CUBE')
+            elif (self.shape == 'CUBE'):
                 ctrl = self.cube_ctrl(self)
-            elif (self.shape == 'ARROW')
+            elif (self.shape == 'ARROW'):
                 ctrl = self.arrow_ctrl(self)
-            elif (self.shape == 'SPHERE')
+            elif (self.shape == 'SPHERE'):
                 ctrl = self.sphere_ctrl(self)
             
             cmds.move(jntPosition[0], jntPosition[1], jntPosition[2], ctrl)
@@ -905,26 +920,26 @@ class BipadAutoRig()
             ctrl_list.append(named_ctrl)
         
         # Set Hirarchy of CTRL
-        for cdx in range(0, len(ctrl_list))
-            if cdx+1 = len(ctrl_list)
+        for cdx in range(0, len(ctrl_list)):
+            if cdx+1 >= len(ctrl_list):
                 break
             cmds.parent(ctrl_list[cdx+1]+'_grp', ctrl_list[cdx])
         
         return named_ctrl
     
     # CTRL Shapes
-    def head_ctrl(self, args)
+    def head_ctrl(self, args):
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.75, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
-        cmds.select(ctrl+'.cv[07]')
+        cmds.select(ctrl+'.cv[0:7]')
         cmds.move(0, 0, -0.9, r=True, os=True, wd=True)
         cmds.rotate(90, 0, 0)
         return ctrl
     
-    def jaw_ctrl(self, args)
+    def jaw_ctrl(self, args):
         ctrl = cmds.curve(d=1, p=[(-0.6, 0, 0), (0.6, 0, 0), (0.4, 0, 1.0), (-0.4, 0, 1.0), (-0.6, 0, 0)])
         return ctrl
     
-    def neck_ctrl(self, args)
+    def neck_ctrl(self, args):
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.6, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
         cmds.softSelect(sse=1)
         cmds.select(str(ctrl) + '.cv[3]')
@@ -936,7 +951,7 @@ class BipadAutoRig()
         cmds.select(clear=True)
         return ctrl
     
-    def shoulder_ctrl(self, args)
+    def shoulder_ctrl(self, args):
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.2, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
         cmds.softSelect(sse=1)
         cmds.select(str(ctrl) + '.cv[3]')
@@ -947,34 +962,34 @@ class BipadAutoRig()
         cmds.move(0, -0.2, 0, r=True)
         cmds.select(clear=True)
         cmds.softSelect(sse=0)
-        cmds.select(str(ctrl) + '.cv[07]')
+        cmds.select(str(ctrl) + '.cv[0:7]')
         cmds.move(0, 2, 0, r=True)
         cmds.select(clear=True)
         return ctrl
     
-    def body_ctrl(self, args)
+    def body_ctrl(self, args):
         ctrl = cmds.curve(d=1, p=[-1.2, 1, -1.3], k=0)
         cmds.curve(ctrl, a=True, d=1, p=[ (-1.2, 1, -1.3), (-1.2, 1, 1), (1.2, 1, 1), (1.2, 1, -1.3), (-1.2, 1, -1.3), (-1.5, -0.66, -1.6), (-1.5, -0.66, 1.3), (-1.2, 1, 1), (-1.5, -0.66, 1.3), (1.5, -0.66, 1.3), (1.2, 1, 1), (1.5, -0.66, 1.3), (1.5, -0.66, -1.6), (1.2, 1, -1.3), (1.5, -0.66, -1.6), (-1.5, -0.66, -1.6) ])
-        cmds.select(str(ctrl) +'.cv[016]')
+        cmds.select(str(ctrl) +'.cv[0:16]')
         cmds.scale(1.2, 1, 1, r=True)
         return ctrl
     
-    def circle_ctrl(self, args)
+    def circle_ctrl(self, args):
         # Circle CTRL
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=1.5, d=3, ut=0, tol=0.01, s=8, ch=1)
         return ctrl[0]
     
-    def middle_circle_ctrl(self, args)
+    def middle_circle_ctrl(self, args):
         # Circle CTRL
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.75, d=3, ut=0, tol=0.01, s=8, ch=1)
         return ctrl[0]
     
-    def small_circle_ctrl(self, args)
+    def small_circle_ctrl(self, args):
         # Circle CTRL
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.25, d=3, ut=0, tol=0.01, s=8, ch=1)
         return ctrl[0]
         
-    def curved_circle_ctrl(self, args)
+    def curved_circle_ctrl(self, args):
         # Shoulder CTRL
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.6, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
         cmds.softSelect(sse=1)
@@ -987,18 +1002,18 @@ class BipadAutoRig()
         cmds.select(clear=True)
         return ctrl
     
-    def square_ctrl(self, args)
+    def square_ctrl(self, args):
         # Square CTRL
         ctrl = cmds.curve(d=1, p=[(-0.6, 0, -0.6), (0.6, 0, -0.6), (0.6, 0, 0.6), (-0.6, 0, 0.6), (-0.6, 0, -0.6)])
         return ctrl
     
-    def cube_ctrl(self, args)
+    def cube_ctrl(self, args):
         # Square CTRL
         ctrl = cmds.curve(d=1, p=[0.5, 0.5, -0.5], k=0)
         cmds.curve(ctrl, a=True, d=1, p=[ (0.5, 0.5, -0.5), (-0.5, 0.5, -0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (0.5, 0.5, -0.5), (0.5, -0.5, -0.5), (-0.5, -0.5, -0.5), (-0.5, 0.5, -0.5), (-0.5, -0.5, -0.5), (-0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (0.5, 0.5, 0.5), (0.5, -0.5, 0.5), (0.5, -0.5, -0.5) ])
         return ctrl
     
-    def pelvis_ctrl(self, args)
+    def pelvis_ctrl(self, args):
         # Pelvis L CTRL
         ctrl = cmds.curve(d=1, p=[0, 0.4, 0.5], k=0) 
         cmds.curve(ctrl, a=True, d=1, p=[ (0, 0.4, 0.5), (1.5, 0.15, 0.55), (1.5, 0.15, -0.55), (0, 0.4, -0.5), (0, 0.4, 0.5), (0, -0.5, 0.5), (0, -0.5, -0.5), (0, 0.4, -0.5), (0, -0.5, -0.5), (1.5, -0.45, -0.55), (1.5, 0.15, -0.55), (1.5, -0.45, -0.55), (1.5, -0.45, 0.55), (1.5, 0.15, 0.55), (1.5, -0.458, 0.55), (0, -0.5, 0.5) ] )
@@ -1006,86 +1021,86 @@ class BipadAutoRig()
         #cmds.rotate(0, 0, 15, r=True, os=True, xyz=True)
         return ctrl
     
-    def arrow_ctrl(self, args)
+    def arrow_ctrl(self, args):
         # Arrow CTRL
         ctrl = cmds.curve(d=1, p=[ (0, 0, 0.5), (-0.4, 0, -0.5), (0.4, 0, -0.5), (0, 0, 0.5), (0, 0.4, -0.5), (0, -0.4, -0.5), (0, 0, 0.5) ])
-        cmds.select(ctrl+'.cv[06]')
+        cmds.select(ctrl+'.cv[0:6]')
         cmds.move(0, 0, -2.5, r=True)
         cmds.select(cl=True)
         return ctrl
     
-    def arrow2_ctrl(self, args)
+    def arrow2_ctrl(self, args):
         # Arrow CTRL
         ctrl = cmds.curve(d=1, p=[(0,0,0), (0,0,-5), (-1,0,-3), (1,0,-3), (0,0,-5), (0,1,-3), (0,-1,-3), (0,0,-5)])
         return ctrl
     
-    def sphere_ctrl(self, args)
+    def sphere_ctrl(self, args):
         ctrl = cmds.curve(d=1, p=[ (0, 0.5052389, 0), (0.1307653, 0.4880228, 0), (0.2526193, 0.4375493, 0), (0.3572577, 0.3572577, 0), (0.4375493, 0.2526193, 0), (0.4880228, 0.1307653, 0), (0.5052389, 0, 0), (0.4880228, -0.1307653, 0), (0.4375493, -0.2526193, 0), (0.3572577, -0.3572577, 0), (0.2526193, -0.4375493, 0), (0.1307653, -0.4880228, 0), (0, -0.5052389, 0), (-0.1307653, -0.4880228, 0), (-0.2526193, -0.4375493, 0), (-0.3572577, -0.3572577, 0), (-0.4375493, -0.2526193, 0), (-0.4880228, -0.1307653, 0), (-0.5052389, 0, 0), (-0.4880228, 0.1307653, 0), (-0.4375493, 0.2526193, 0), (-0.3572577, 0.3572577, 0), (-0.2526193, 0.4375493, 0), (-0.1307653, 0.4880228, 0), (0, 0.5052389, 0), (0, 0.4880228, 0.1307653), (0, 0.4375493, 0.2526193), (0, 0.3572577, 0.3572577), (0, 0.2526193, 0.4375493), (0, 0.1307653, 0.4880228), (0, 0, 0.5052389), (0, -0.1307653, 0.4880228), (0, -0.2526193, 0.4375493), (0, -0.3572577, 0.3572577), (0, -0.4375493, 0.2526193), (0, -0.4880228, 0.1307653), (0, -0.5052389, 0), (0, -0.4880228, -0.1307653), (0, -0.4375493, -0.2526193), (0, -0.3572577, -0.3572577), (0, -0.2526193, -0.4375493), (0, -0.1307653, -0.4880228), (0, 0, -0.5052389), (-0.1307653, 0, -0.4880228), (-0.2526193, 0, -0.4375493), (-0.3572577, 0, -0.3572577), (-0.4375493, 0, -0.2526193), (-0.4880228, 0, -0.1307653), (-0.5052389, 0, 0), (-0.4880228, 0, 0.1307653), (-0.4375493, 0, 0.2526193), (-0.3572577, 0, 0.3572577), (-0.2526193, 0, 0.4375493), (-0.1307653, 0, 0.4880228), (0, 0, 0.5052389), (0.1307653, 0, 0.4880228), (0.2526193, 0, 0.4375493), (0.3572577, 0, 0.3572577), (0.4375493, 0, 0.2526193), (0.4880228, 0, 0.1307653), (0.5052389, 0, 0), (0.4880228, 0, -0.1307653), (0.4375493, 0, -0.2526193), (0.3572577, 0, -0.3572577), (0.2526193, 0, -0.4375493), (0.1307653, 0, -0.4880228), (0, 0, -0.5052389), (0, 0.1307653, -0.4880228), (0, 0.2526193, -0.4375493), (0, 0.3572577, -0.3572577), (0, 0.4375493, -0.2526193), (0, 0.4880228, -0.1307653), (0, 0.5052389, 0) ] )
         return ctrl
     
-    def foot_lf_ctrl(self, args)
+    def foot_lf_ctrl(self, args):
         ctrl = cmds.curve(d=1, p=[0, 0, -2.120128], k=0) 
         cmds.curve(ctrl, a=True, d=1, p=[ (0, 0, -2.120128), (0, 0, -2.120128), (0.127027, 0, -2.098891), (0.266394, 0, -2.035954), (0.392426, 0, -1.923814), (0.51076, 0, -1.7556), (0.570988, 0, -1.45298), (0.547002, 0, -1.124658), (0.546137, 0, -0.739398), (0.596986, 0, -0.424671), (0.749207, 0, 0.167214), (0.821629, 0, 0.540794), (0.845588, 0, 0.814546), (0.819474, 0, 1.166447), (0.740338, 0, 1.442584), (0.639319, 0, 1.672901), (0.518089, 0, 1.859678), (0.395504, 0, 1.9981), (0.267004, 0, 2.095142), (0.134293, 0, 2.163449), (0.00467529, 0, 2.182247), (-0.129434, 0, 2.164107), (-0.263571, 0, 2.097171), (-0.394311, 0, 1.99895), (-0.519026, 0, 1.858581), (-0.639218, 0, 1.673153), (-0.741687, 0, 1.437876), (-0.814669, 0, 1.183211), (-0.845483, 0, 0.813956), (-0.823555, 0, 0.546201), (-0.787024, 0, 0.199789), (-0.740926, 0, -0.141818), (-0.709665, 0, -0.449727), (-0.673223, 0, -0.84127), (-0.647076, 0, -1.105326), (-0.607085, 0, -1.441585), (-0.515494, 0, -1.742999), (-0.403107, 0, -1.909041), (-0.26381, 0, -2.03716), (-0.134123, 0, -2.097657), (0.00016811, 0, -2.1201) ])
         cmds.scale(-0.8, 0.8, 0.8, r=True)
         cmds.move(0.967, 0, 0.3, rpr=True)
-        cmds.move(0.967, 0.785, -0.193, .scalePivot, .rotatePivot, a=True)
+        cmds.move(0.967, 0.785, -0.193, ".scalePivot", ".rotatePivot", a=True)
         cmds.select(cl=True)
         return ctrl
     
-    def foot_rt_ctrl(self, args)
+    def foot_rt_ctrl(self, args):
         ctrl = cmds.curve(d=1, p=[0, 0, -2.120128], k=0) 
         cmds.curve(ctrl, a=True, d=1, p=[ (0, 0, -2.120128), (0, 0, -2.120128), (0.127027, 0, -2.098891), (0.266394, 0, -2.035954), (0.392426, 0, -1.923814), (0.51076, 0, -1.7556), (0.570988, 0, -1.45298), (0.547002, 0, -1.124658), (0.546137, 0, -0.739398), (0.596986, 0, -0.424671), (0.749207, 0, 0.167214), (0.821629, 0, 0.540794), (0.845588, 0, 0.814546), (0.819474, 0, 1.166447), (0.740338, 0, 1.442584), (0.639319, 0, 1.672901), (0.518089, 0, 1.859678), (0.395504, 0, 1.9981), (0.267004, 0, 2.095142), (0.134293, 0, 2.163449), (0.00467529, 0, 2.182247), (-0.129434, 0, 2.164107), (-0.263571, 0, 2.097171), (-0.394311, 0, 1.99895), (-0.519026, 0, 1.858581), (-0.639218, 0, 1.673153), (-0.741687, 0, 1.437876), (-0.814669, 0, 1.183211), (-0.845483, 0, 0.813956), (-0.823555, 0, 0.546201), (-0.787024, 0, 0.199789), (-0.740926, 0, -0.141818), (-0.709665, 0, -0.449727), (-0.673223, 0, -0.84127), (-0.647076, 0, -1.105326), (-0.607085, 0, -1.441585), (-0.515494, 0, -1.742999), (-0.403107, 0, -1.909041), (-0.26381, 0, -2.03716), (-0.134123, 0, -2.097657), (0.00016811, 0, -2.1201) ])
         cmds.scale(0.8, 0.8, 0.8, r=True)
         cmds.move(-0.967, 0, 0.3, rpr=True)
-        cmds.move(-0.967, 0.785, -0.193, .scalePivot, .rotatePivot, a=True)
+        cmds.move(-0.967, 0.785, -0.193, ".scalePivot", ".rotatePivot", a=True)
         cmds.select(cl=True)
         return ctrl
     
     # Coloring CTRL
-    def coloring_ctrl(self, args)
+    def coloring_ctrl(self, args):
         
         sel = cmds.ls(sl=True)
         
-        for s in sel
+        for s in sel:
             cmds.setAttr(str(s) + '.overrideEnabled', 1)
             
-            if(self.color == 'BLACK')
+            if(self.color == 'BLACK'):
                 cmds.setAttr(str(s) + '.overrideColor', 1)
-            elif(self.color == 'DARK_GREY')
+            elif(self.color == 'DARK_GREY'):
                 cmds.setAttr(str(s) + '.overrideColor', 2)
-            elif(self.color == 'LIGHT_GREY')
+            elif(self.color == 'LIGHT_GREY'):
                 cmds.setAttr(str(s) + '.overrideColor', 3)
-            elif(self.color == 'RED')
+            elif(self.color == 'RED'):
                 cmds.setAttr(str(s) + '.overrideColor', 4)
-            elif(self.color == 'DEFAULT')
+            elif(self.color == 'DEFAULT'):
                 cmds.setAttr(str(s) + '.overrideColor', 5) 
-            elif(self.color == 'BLUE')
+            elif(self.color == 'BLUE'):
                 cmds.setAttr(str(s) + '.overrideColor', 6)
-            elif(self.color == 'DARK_GREEN')
+            elif(self.color == 'DARK_GREEN'):
                 cmds.setAttr(str(s) + '.overrideColor', 7)
-            elif(self.color == 'PINK')
+            elif(self.color == 'PINK'):
                 cmds.setAttr(str(s) + '.overrideColor', 9)
-            elif(self.color == 'YELLOW')
+            elif(self.color == 'YELLOW'):
                 cmds.setAttr(str(s) + '.overrideColor', 13)
-            elif(self.color == 'WHITE')
+            elif(self.color == 'WHITE'):
                 cmds.setAttr(str(s) + '.overrideColor', 16)
-            elif(self.color == 'LIGHT_GREEN')
+            elif(self.color == 'LIGHT_GREEN'):
                 cmds.setAttr(str(s) + '.overrideColor', 17)
-            elif(self.color == 'SKYBLUE')
+            elif(self.color == 'SKYBLUE'):
                 cmds.setAttr(str(s) + '.overrideColor', 18)
-            elif(self.color == 'MINT')
+            elif(self.color == 'MINT'):
                 cmds.setAttr(str(s) + '.overrideColor', 19)
-            elif(self.color == 'APRICOT')    # 살구색
+            elif(self.color == 'APRICOT'):    # 살구색
                 cmds.setAttr(str(s) + '.overrideColor', 20)
-            elif(self.color == 'PURPLE')
+            elif(self.color == 'PURPLE'):
                 cmds.setAttr(str(s) + '.overrideColor', 31)
         
         cmds.select(cl=True)
     
     
-    def build(self, args)
+    def build(self, args):
         '''
-            STEP 4 Build
+            STEP 4: Build
         '''
         
         # Head
@@ -1299,7 +1314,7 @@ class BipadAutoRig()
         
         # Foot
         ## Add Foot Atribute
-        foot_ik_lf_bank_grp = cmds.group(empty=True, n=foot_ik_lf_bank_grp)
+        foot_ik_lf_bank_grp = cmds.group(empty=True, n="foot_ik_lf_bank_grp")
         cmds.move(0.967, 0.186, 0.733, foot_ik_lf_bank_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.joint(a=True, p=[0.967, 0.186, -0.632], rad=0.1, n='heel_ik_lf_ctrl_jnt')
@@ -1328,7 +1343,7 @@ class BipadAutoRig()
         cmds.parent('lf_R_bank_loc', 'foot_lf_ik_ctrl')
         cmds.parent('lf_F_bank_loc', 'foot_lf_ik_ctrl')
         #
-        foot_ik_rt_bank_grp = cmds.group(empty=True, n=foot_ik_rt_bank_grp)
+        foot_ik_rt_bank_grp = cmds.group(empty=True, n="foot_ik_rt_bank_grp")
         cmds.move(-0.967, 0.186, 0.733, foot_ik_rt_bank_grp)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.joint(a=True, p=[-0.967, 0.186, -0.632], rad=0.1, n='heel_ik_rt_ctrl_jnt')
@@ -1390,20 +1405,20 @@ class BipadAutoRig()
         cmds.parentConstraint('leg_rt_bind_ankle_jnt', 'leg_rt_switch', w=1, mo=True)
         
         # Hide ikHandles
-        cmds.select('_ikHandle')
+        cmds.select('*_ikHandle')
         sel = cmds.ls(sl=True)
-        for s in sel
+        for s in sel:
             cmds.setAttr(s+'.visibility', 0)
         
         cmds.select(clear=True)
         
         # Set Driven Key
         ## FK CTRLs
-        cmds.select('_fk__jnt_ctrl', '_00_jnt_ctrl')
-        cmds.select('spine_', d=True)
+        cmds.select('*_fk_*_jnt_ctrl', '*_00*_jnt_ctrl')
+        cmds.select('spine_*', d=True)
         fk = cmds.ls(sl=True)
         
-        for f in fk
+        for f in fk:
             cmds.setAttr(f+'.tx', l=True, k=False, cb=False)
             cmds.setAttr(f+'.ty', l=True, k=False, cb=False)
             cmds.setAttr(f+'.tz', l=True, k=False, cb=False)
@@ -1412,10 +1427,10 @@ class BipadAutoRig()
             cmds.setAttr(f+'.sz', l=True, k=False, cb=False)
             cmds.setAttr(f+'.v', l=True, k=False, cb=False)
         
-        cmds.select('spine_fk_00_jnt_ctrl')
+        cmds.select('spine_fk_00*_jnt_ctrl')
         spinefk = cmds.ls(sl=True)
         
-        for sf in spinefk
+        for sf in spinefk:
             cmds.setAttr(sf+'.sx', l=True, k=False, cb=False)
             cmds.setAttr(sf+'.sy', l=True, k=False, cb=False)
             cmds.setAttr(sf+'.sz', l=True, k=False, cb=False)
@@ -1480,15 +1495,15 @@ class BipadAutoRig()
         selectedObjs = cmds.ls(sl=True)
         ctrl_list = []
         
-        for sel in selectedObjs
+        for sel in selectedObjs:
             shapeNode = cmds.listRelatives(sel, shapes=True)
             nodeType = cmds.nodeType(shapeNode)
                 
-            if(nodeType=='nurbsCurve')
+            if(nodeType=='nurbsCurve'):
                 ctrl_list.append(sel)
                 print sel
         
-        for cl in ctrl_list
+        for cl in ctrl_list:
             name = cl +'_curl_grp'
             cl_grp = cmds.group(cl, n=name)
             
@@ -1496,7 +1511,7 @@ class BipadAutoRig()
             jnt_pos = cmds.xform(jnt, q=True, ws=True, rp=True)
             
             cmds.select(cl_grp)
-            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], .scalePivot, .rotatePivot, a=True)
+            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], ".scalePivot", ".rotatePivot", a=True)
         
         #### Create Groups for Spread Attributes
         cmds.select('thumb_lf_001_jnt_ctrl_curl_grp')
@@ -1508,7 +1523,7 @@ class BipadAutoRig()
         selectedObjs = cmds.ls(sl=True)
         ctrl_list = []
         
-        for sel in selectedObjs
+        for sel in selectedObjs:
             name = sel.replace('curl', 'spread')
             sel_grp = cmds.group(sel, n=name)
             
@@ -1516,7 +1531,7 @@ class BipadAutoRig()
             jnt_pos = cmds.xform(jnt, q=True, ws=True, rp=True)
             
             cmds.select(sel_grp)
-            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], .scalePivot, .rotatePivot, a=True)
+            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], ".scalePivot", ".rotatePivot", a=True)
         
         #### Set Finger Curl Attributes
         cmds.setAttr('arm_lf_switch.Thumb_Curl', 0)
@@ -1726,15 +1741,15 @@ class BipadAutoRig()
         selectedObjs = cmds.ls(sl=True)
         ctrl_list = []
         
-        for sel in selectedObjs
+        for sel in selectedObjs:
             shapeNode = cmds.listRelatives(sel, shapes=True)
             nodeType = cmds.nodeType(shapeNode)
                 
-            if(nodeType=='nurbsCurve')
+            if(nodeType=='nurbsCurve'):
                 ctrl_list.append(sel)
                 print sel
         
-        for cl in ctrl_list
+        for cl in ctrl_list:
             name = cl +'_curl_grp'
             cl_grp = cmds.group(cl, n=name)
             
@@ -1742,7 +1757,7 @@ class BipadAutoRig()
             jnt_pos = cmds.xform(jnt, q=True, ws=True, rp=True)
             
             cmds.select(cl_grp)
-            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], .scalePivot, .rotatePivot, a=True)
+            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], ".scalePivot", ".rotatePivot", a=True)
         
         #### Create Groups for Spread Attributes
         cmds.select('thumb_rt_001_jnt_ctrl_curl_grp')
@@ -1754,7 +1769,7 @@ class BipadAutoRig()
         selectedObjs = cmds.ls(sl=True)
         ctrl_list = []
         
-        for sel in selectedObjs
+        for sel in selectedObjs:
             name = sel.replace('curl', 'spread')
             sel_grp = cmds.group(sel, n=name)
             
@@ -1762,7 +1777,7 @@ class BipadAutoRig()
             jnt_pos = cmds.xform(jnt, q=True, ws=True, rp=True)
             
             cmds.select(sel_grp)
-            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], .scalePivot, .rotatePivot, a=True)
+            cmds.move(jnt_pos[0], jnt_pos[1], jnt_pos[2], ".scalePivot", ".rotatePivot", a=True)
         
         #### Set Finger Curl Attributes
         cmds.setAttr('arm_rt_switch.Thumb_Curl', 0)
@@ -2117,20 +2132,20 @@ class BipadAutoRig()
         cmds.select(clear=True)
     
     
-    def import_weight(self, args)
+    def import_weight(self, args):
         '''
-            STEP 5 Import Weight
+            STEP 5: Import Weight
         '''
         pass
         cmds.fileBrowserDialog(mode=0, fileCommand=self.apply_weight, fileType='directory', an='Import weight', operationMode='Import')
     
     
-    def apply_weight(self, fileName, fileType)
+    def apply_weight(self, fileName, fileType):
         pass
     
     
-    def showHelp(self, args)
-        cmds.showHelp(httpsgithub.comJaewanKimmaya-plugin, absolute=True)
+    def showHelp(self, args):
+        cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
 
 
 BipadAutoRig()
