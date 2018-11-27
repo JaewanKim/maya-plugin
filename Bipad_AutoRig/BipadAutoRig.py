@@ -432,6 +432,9 @@ class BipadAutoRig():
         cmds.select('dummy_*jnt')
         self.coloring_ctrl(self)
         
+        cmds.select(clear=True)
+        
+        
         
     def confirm_orient_joint(self, args):
         '''
@@ -448,14 +451,37 @@ class BipadAutoRig():
         cmds.select(clear=True)
         
         
+        
     def fix_jnt(self, args):
         '''
             STEP 2: Fix the Joint
             # Generate IK,FK,BIND joint referred to dummy joint
         '''
         
+        cmds.select('*jnt')
+        
+        jnt_list = cmds.ls(sl=True)
+        
+        # Create new JNT with new name
+        t = [0,0,0]
+        for i in range(0, len(jnt_list)):
+            jnt_name = jnt_list[i].replace('dummy_', '')
+            cmds.select(cl=True)
+            cmds.joint(a=True, p=[0,0,0], rad=0.6, n=jnt_name)
+            constraint = cmds.parentConstraint(jnt_list[i], jnt_name, w=1, mo=False)
+            cmds.delete(constraint)
+            
         cmds.select(clear=True)
         
+        
+        # Set joint hierarchy & grouping    # HOW..?
+        # Adjust Joint Orientation 
+        
+        # Duplicate joints for FK
+        # Duplicate joints for BIND
+        
+        
+        '''
         cmds.duplicate('dummy_ch_grp', st=True, rc=True)
         
         cmds.select('dummy_ch_grp1', hi=True)
@@ -466,15 +492,35 @@ class BipadAutoRig():
             name = name[:len(name)-1]        # slice last number
             cmds.rename(s, name)
         
+        cmds.delete('dummy*')    # NOT GOOD FOR FUTURE I THINK
         cmds.delete('*Constraint')
-        cmds.hide('dummy_ch_grp')
         
         self.color = 'DEFAULT'
         cmds.select('*jnt')
-        cmds.select('dummy*jnt', d=True)
+        #cmds.select('dummy*jnt', d=True)
         self.coloring_ctrl(self)
         
         cmds.select(cl=True)
+        
+        # Joint Orientation to Rotate Attribute
+        cmds.select('*jnt', hi=True)
+        sel = cmds.ls(sl=True)
+        
+        for s in sel:
+            cmds.setAttr(s+'.jox', cmds.getAttr(s+'.rx'))
+            cmds.setAttr(s+'.joy', cmds.getAttr(s+'.ry'))
+            cmds.setAttr(s+'.joz', cmds.getAttr(s+'.rz'))
+            
+            cmds.setAttr(s+'.rotateX', 0)
+            cmds.setAttr(s+'.rotateY', 0)
+            cmds.setAttr(s+'.rotateZ', 0)
+        
+        # Make up Joint Orientation
+        cmds.select('pelvis_rt_001_jnt', hi=True)
+        cmds.joint(e=True, oj='yzx', sao='zdown', ch=True, zso=True)
+        cmds.select(clear=True)
+        '''
+        
         
         
     def create_ctrl(self, args):
