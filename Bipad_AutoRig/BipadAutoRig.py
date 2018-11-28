@@ -474,52 +474,107 @@ class BipadAutoRig():
         cmds.select(clear=True)
         
         
-        # Set joint hierarchy & grouping    # HOW..?
+        # Set joint hierarchy
+        cmds.parent('head_002_jnt', 'head_001_jnt')
+        
+        cmds.parent('jaw_002_jnt', 'jaw_001_jnt')
+        
+        cmds.parent('neck_002_jnt', 'neck_001_jnt')
+        cmds.parent('neck_003_jnt', 'neck_002_jnt')
+        
+        cmds.parent('shoulder_lf_002_jnt', 'shoulder_lf_001_jnt')
+        cmds.parent('shoulder_rt_002_jnt', 'shoulder_rt_001_jnt')
+        
+        cmds.parent('arm_lf_ik_elbow_jnt', 'arm_lf_ik_shoulder_jnt')
+        cmds.parent('arm_lf_ik_wrist_jnt', 'arm_lf_ik_elbow_jnt')
+        cmds.parent('arm_lf_ik_hand_jnt', 'arm_lf_ik_wrist_jnt')
+        cmds.parent('arm_rt_ik_elbow_jnt', 'arm_rt_ik_shoulder_jnt')
+        cmds.parent('arm_rt_ik_wrist_jnt', 'arm_rt_ik_elbow_jnt')
+        cmds.parent('arm_rt_ik_hand_jnt', 'arm_rt_ik_wrist_jnt')
+        
+        finger = ['thumb', 'index', 'middle', 'ring', 'pinky']
+        lf_rt = ['lf', 'rt']
+        for lr in lf_rt:
+            for f in finger:
+                for i in range(1,4):
+                    cmds.parent(f+'_'+lr+'_00'+str(i+1)+'_jnt', f+'_'+lr+'_00'+str(i)+'_jnt')
+        
+        for i in range(1,9):
+            cmds.parent('spine_ik_bind_00'+str(i+1)+'_jnt', 'spine_ik_bind_00'+str(i)+'_jnt')
+        
+        cmds.parent('pelvis_lf_002_jnt', 'pelvis_lf_001_jnt')
+        cmds.parent('pelvis_rt_002_jnt', 'pelvis_rt_001_jnt')
+        
+        cmds.parent('leg_lf_ik_shin_jnt', 'leg_lf_ik_tight_jnt')
+        cmds.parent('leg_lf_ik_ankle_jnt', 'leg_lf_ik_shin_jnt')
+        cmds.parent('leg_lf_ik_ball_jnt', 'leg_lf_ik_ankle_jnt')
+        cmds.parent('leg_lf_ik_toe_jnt', 'leg_lf_ik_ball_jnt')
+        cmds.parent('leg_rt_ik_shin_jnt', 'leg_rt_ik_tight_jnt')
+        cmds.parent('leg_rt_ik_ankle_jnt', 'leg_rt_ik_shin_jnt')
+        cmds.parent('leg_rt_ik_ball_jnt', 'leg_rt_ik_ankle_jnt')
+        cmds.parent('leg_rt_ik_toe_jnt', 'leg_rt_ik_ball_jnt')
+        
+        
+        # Group jnt_grp
+        parts = ['head', 'jaw', 'neck', 'shoulder_lf', 'shoulder_rt', 'pelvis_lf', 'pelvis_rt']
+        for part in parts:
+            cmds.group(em=True, n=part+'_jnt_grp')    # head_jnt_grp
+            t = cmds.xform(part+'_001_jnt', r=True, q=True, t=True)
+            cmds.move(t[0], t[1], t[2], part+'_jnt_grp')
+            cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+            cmds.parent(part+'_001_jnt', part+'_jnt_grp')
+        
+        for lr in lf_rt:
+            # Arm 
+            cmds.group(em=True, n='arm_'+lr+'_jnt_grp')
+            t = cmds.xform('arm_'+lr+'_ik_shoulder_jnt', r=True, q=True, t=True)
+            cmds.move(t[0], t[1], t[2], 'arm_'+lr+'_jnt_grp')
+            cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+            cmds.parent('arm_'+lr+'_ik_shoulder_jnt', 'arm_'+lr+'_jnt_grp')
+        
+            # Hand 
+            cmds.group(em=True, n='hand_'+lr+'_jnt_grp')
+            t = cmds.joint('arm_'+lr+'_ik_wrist_jnt', q=True, p=True)
+            cmds.move(t[0], t[1], t[2], 'hand_'+lr+'_jnt_grp')
+            cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+            
+            for f in finger:
+                cmds.parent(f+'_'+lr+'_001_jnt', 'hand_'+lr+'_jnt_grp')
+            
+            # Leg
+            cmds.group(em=True, n='leg_'+lr+'_jnt_grp')
+            t = cmds.xform('leg_'+lr+'_ik_tight_jnt', r=True, q=True, t=True)
+            cmds.move(t[0], t[1], t[2], 'leg_'+lr+'_jnt_grp')
+            cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+            cmds.parent('leg_'+lr+'_ik_tight_jnt', 'leg_'+lr+'_jnt_grp')
+        
+        # Spine
+        cmds.group(em=True, n='spine_jnt_grp')
+        t = cmds.xform('spine_ik_bind_001_jnt', r=True, q=True, t=True)
+        cmds.move(t[0], t[1], t[2], 'spine_jnt_grp')
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('spine_ik_bind_001_jnt', 'spine_jnt_grp')
+        
+        cmds.group(em=True, n='jnt_grp')
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        
+        cmds.select('*jnt_grp')
+        cmds.select('jnt_grp', d=True)
+        cmds.select('dummy*', d=True)
+        sel = cmds.ls(sl=True)
+        for s in sel:
+            cmds.parent(s, 'jnt_grp')
+            
+        cmds.select(cl=True)
+        
+        cmds.group(em=True, n='ch_grp')
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('jnt_grp', 'ch_grp')
+        
         # Adjust Joint Orientation 
         
         # Duplicate joints for FK
         # Duplicate joints for BIND
-        
-        
-        '''
-        cmds.duplicate('dummy_ch_grp', st=True, rc=True)
-        
-        cmds.select('dummy_ch_grp1', hi=True)
-        sel = cmds.ls(sl=True)
-        
-        for s in sel:
-            name = s.replace('dummy_', '')
-            name = name[:len(name)-1]        # slice last number
-            cmds.rename(s, name)
-        
-        cmds.delete('dummy*')    # NOT GOOD FOR FUTURE I THINK
-        cmds.delete('*Constraint')
-        
-        self.color = 'DEFAULT'
-        cmds.select('*jnt')
-        #cmds.select('dummy*jnt', d=True)
-        self.coloring_ctrl(self)
-        
-        cmds.select(cl=True)
-        
-        # Joint Orientation to Rotate Attribute
-        cmds.select('*jnt', hi=True)
-        sel = cmds.ls(sl=True)
-        
-        for s in sel:
-            cmds.setAttr(s+'.jox', cmds.getAttr(s+'.rx'))
-            cmds.setAttr(s+'.joy', cmds.getAttr(s+'.ry'))
-            cmds.setAttr(s+'.joz', cmds.getAttr(s+'.rz'))
-            
-            cmds.setAttr(s+'.rotateX', 0)
-            cmds.setAttr(s+'.rotateY', 0)
-            cmds.setAttr(s+'.rotateZ', 0)
-        
-        # Make up Joint Orientation
-        cmds.select('pelvis_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zdown', ch=True, zso=True)
-        cmds.select(clear=True)
-        '''
         
         
         
