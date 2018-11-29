@@ -571,6 +571,19 @@ class BipadAutoRig():
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
         cmds.parent('jnt_grp', 'ch_grp')
         
+        cmds.hide('dummy_ch_grp')
+        
+        cmds.reorder('head_jnt_grp', r=-4)
+        cmds.reorder('jaw_jnt_grp', r=-4)
+        cmds.reorder('neck_jnt_grp', r=-6)
+        cmds.reorder('shoulder_lf_jnt_grp', r=-8)
+        cmds.reorder('shoulder_rt_jnt_grp', r=-8)
+        cmds.reorder('spine_jnt_grp', r=-4)
+        cmds.reorder('pelvis_lf_jnt_grp', r=-2)
+        cmds.reorder('pelvis_rt_jnt_grp', r=-2)
+        
+        cmds.select(cl=True)
+        
         # Adjust Joint Orientation 
         
         # Duplicate joints for FK
