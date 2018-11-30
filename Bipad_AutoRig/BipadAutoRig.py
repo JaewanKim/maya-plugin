@@ -597,10 +597,155 @@ class BipadAutoRig():
         
         cmds.select(cl=True)
         
-        # Duplicate joints for FK
         
-        # Duplicate joints for BIND
+        # Duplicate IK Joints for FK,BIND
+        # Left Arm
+        cmds.duplicate('arm_lf_ik_shoulder_jnt', rc=True)
         
+        cmds.select('arm_lf_ik_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'fk')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('arm_lf_fk_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        cmds.duplicate('arm_lf_ik_shoulder_jnt', rc=True)
+        
+        cmds.select('arm_lf_ik_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'bind')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('arm_lf_bind_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        # Right Arm
+        cmds.duplicate('arm_rt_ik_shoulder_jnt', rc=True)
+        
+        cmds.select('arm_rt_ik_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'fk')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('arm_rt_fk_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        cmds.duplicate('arm_rt_ik_shoulder_jnt', rc=True)
+        
+        cmds.select('arm_rt_ik_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'bind')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('arm_rt_bind_shoulder_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        
+        # Spine
+        cmds.select('spine_jnt_grp')
+        cmds.joint(a=True, p=[0, 8.869, 0.316], rad=0.6, n='spine_fk_001_jnt')
+        cmds.joint(a=True, p=[0, 9.742, 0.404], rad=0.6, n='spine_fk_002_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 10.862, 0.379], rad=0.6, n='spine_fk_006_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='spine_fk_009_jnt')
+        cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
+        
+        cmds.select('spine_fk_001_jnt', hi=True)
+        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
+        
+        # Left Leg
+        cmds.duplicate('leg_lf_ik_tight_jnt', rc=True)
+        
+        cmds.select('leg_lf_ik_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'fk')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('leg_lf_fk_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        cmds.duplicate('leg_lf_ik_tight_jnt', rc=True)
+        
+        cmds.select('leg_lf_ik_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'bind')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('leg_lf_bind_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        # Right Leg
+        cmds.duplicate('leg_rt_ik_tight_jnt', rc=True)
+        
+        cmds.select('leg_rt_ik_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'fk')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('leg_rt_fk_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        cmds.duplicate('leg_rt_ik_tight_jnt', rc=True)
+        
+        cmds.select('leg_rt_ik_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_bind = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik', 'bind')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('leg_rt_bind_tight_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        
+        #
         
         
     def create_ctrl(self, args):
