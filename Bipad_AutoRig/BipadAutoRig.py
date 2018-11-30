@@ -471,8 +471,21 @@ class BipadAutoRig():
             constraint = cmds.parentConstraint(jnt_list[i], jnt_name, w=1, mo=False)
             cmds.delete(constraint)
             
-        cmds.select(clear=True)
+        cmds.select(cl=True)
         
+        # Adjust Joint Orientation
+        cmds.select('*jnt')
+        cmds.select('dummy*', d=True)
+        
+        sel = cmds.ls(sl=True)
+        
+        for s in sel:
+            cmds.setAttr( s+'.jox', cmds.getAttr(s+'.rx') )
+            cmds.setAttr( s+'.joy', cmds.getAttr(s+'.ry') )
+            cmds.setAttr( s+'.joz', cmds.getAttr(s+'.rz') )
+            cmds.setAttr( s+'.rotateX', 0 )
+            cmds.setAttr( s+'.rotateY', 0 )
+            cmds.setAttr( s+'.rotateZ', 0 )
         
         # Set joint hierarchy
         cmds.parent('head_002_jnt', 'head_001_jnt')
@@ -584,9 +597,8 @@ class BipadAutoRig():
         
         cmds.select(cl=True)
         
-        # Adjust Joint Orientation 
-        
         # Duplicate joints for FK
+        
         # Duplicate joints for BIND
         
         
