@@ -745,7 +745,28 @@ class BipadAutoRig():
             tmp_fk[i] = tmp_ik[i].replace('t1', 't')
             cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
         
-        #
+        
+        # Arm, Hand, Leg Joint Constraint
+        cmds.orientConstraint('arm_lf_ik_shoulder_jnt', 'arm_lf_fk_shoulder_jnt', 'arm_lf_bind_shoulder_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_lf_ik_elbow_jnt', 'arm_lf_fk_elbow_jnt', 'arm_lf_bind_elbow_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_lf_ik_wrist_jnt', 'arm_lf_fk_wrist_jnt', 'arm_lf_bind_wrist_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_rt_ik_shoulder_jnt', 'arm_rt_fk_shoulder_jnt', 'arm_rt_bind_shoulder_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_rt_ik_elbow_jnt', 'arm_rt_fk_elbow_jnt', 'arm_rt_bind_elbow_jnt', w=1, mo=True)
+        cmds.orientConstraint('arm_rt_ik_wrist_jnt', 'arm_rt_fk_wrist_jnt', 'arm_rt_bind_wrist_jnt', w=1, mo=True)
+        
+        cmds.parentConstraint('arm_lf_bind_wrist_jnt', 'hand_lf_jnt_grp', w=1, mo=True)
+        cmds.parentConstraint('arm_rt_bind_wrist_jnt', 'hand_rt_jnt_grp', w=1, mo=True)
+        
+        cmds.orientConstraint('leg_lf_ik_tight_jnt', 'leg_lf_fk_tight_jnt', 'leg_lf_bind_tight_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_shin_jnt', 'leg_lf_fk_shin_jnt', 'leg_lf_bind_shin_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_ankle_jnt', 'leg_lf_fk_ankle_jnt', 'leg_lf_bind_ankle_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_lf_ik_ball_jnt', 'leg_lf_fk_ball_jnt', 'leg_lf_bind_ball_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_tight_jnt', 'leg_rt_fk_tight_jnt', 'leg_rt_bind_tight_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_shin_jnt', 'leg_rt_fk_shin_jnt', 'leg_rt_bind_shin_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_ankle_jnt', 'leg_rt_fk_ankle_jnt', 'leg_rt_bind_ankle_jnt', w=1, mo=True)
+        cmds.orientConstraint('leg_rt_ik_ball_jnt', 'leg_rt_fk_ball_jnt', 'leg_rt_bind_ball_jnt', w=1, mo=True)
+        
+        cmds.select(cl=True)
         
         
     def create_ctrl(self, args):
@@ -1397,7 +1418,7 @@ class BipadAutoRig():
         ## Add Shoulder Atribute
         
         
-        
+        '''
         # Arm
         ## Link IK,FK,Bind Arm Joints 
         cmds.orientConstraint('arm_lf_ik_shoulder_jnt', 'arm_lf_fk_shoulder_jnt', 'arm_lf_bind_shoulder_jnt', w=1, mo=True)
@@ -1407,7 +1428,7 @@ class BipadAutoRig():
         cmds.orientConstraint('arm_rt_ik_shoulder_jnt', 'arm_rt_fk_shoulder_jnt', 'arm_rt_bind_shoulder_jnt', w=1, mo=True)
         cmds.orientConstraint('arm_rt_ik_elbow_jnt', 'arm_rt_fk_elbow_jnt', 'arm_rt_bind_elbow_jnt', w=1, mo=True)
         cmds.orientConstraint('arm_rt_ik_wrist_jnt', 'arm_rt_fk_wrist_jnt', 'arm_rt_bind_wrist_jnt', w=1, mo=True)
-        
+        '''
         ## Set Arm CTRL
         cmds.parentConstraint('arm_lf_fk_shoulder_jnt_ctrl', 'arm_lf_fk_shoulder_jnt', w=1, mo=True)
         cmds.parentConstraint('arm_lf_fk_elbow_jnt_ctrl', 'arm_lf_fk_elbow_jnt', w=1, mo=True)
@@ -1541,7 +1562,7 @@ class BipadAutoRig():
         cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
         cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
         
-        
+        '''
         # Leg
         ## Link IK,FK,Bind Leg Joints 
         cmds.orientConstraint('leg_lf_ik_tight_jnt', 'leg_lf_fk_tight_jnt', 'leg_lf_bind_tight_jnt', w=1, mo=True)
@@ -1553,7 +1574,7 @@ class BipadAutoRig():
         cmds.orientConstraint('leg_rt_ik_shin_jnt', 'leg_rt_fk_shin_jnt', 'leg_rt_bind_shin_jnt', w=1, mo=True)
         cmds.orientConstraint('leg_rt_ik_ankle_jnt', 'leg_rt_fk_ankle_jnt', 'leg_rt_bind_ankle_jnt', w=1, mo=True)
         cmds.orientConstraint('leg_rt_ik_ball_jnt', 'leg_rt_fk_ball_jnt', 'leg_rt_bind_ball_jnt', w=1, mo=True)
-        
+        '''
         ## Create Leg IK Hadles
         ik_handle = cmds.ikHandle(sj='leg_lf_ik_tight_jnt', ee='leg_lf_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
         cmds.rename(ik_handle, 'lf_ankle_ikHandle')
