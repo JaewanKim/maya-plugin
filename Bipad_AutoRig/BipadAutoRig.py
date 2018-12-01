@@ -16,8 +16,8 @@ class BipadAutoRig():
         Things to do :
             - arm PoleVector causes positional deviation of bone (CHECK ROTATAION VALUE)
             - Build (In progress)
-                - Head, Jaw, Neck Constrain
-                - Root Constrain
+                - Head, Jaw, Neck Constraint
+                - Root Constraint
                 - Set Attributes
                     - Shoulder/Pelvis Rot
                     - Wrist Rot
@@ -57,12 +57,13 @@ class BipadAutoRig():
         cmds.text("Generate IK,FK,BIND joint referred to dummy joint")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label="STEP 3: Create Controllers", command=self.create_ctrl)
-        cmds.text("JO must be YZZ")
+        cmds.button(label="STEP 3: Create CTRLs", command=self.create_ctrl)
+        cmds.text("CTRLs will be created by following JO(YZZ)")
+        cmds.text("Please adjust CTRLs to your liking")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label="Build", command=self.build)
-        cmds.text(" ")
+        cmds.button(label="STEP 4: Fix the CTRLs", command=self.build)
+        cmds.text("Connect Joints and CTRLs")
         cmds.separator(h=15, style='none', hr=True)
         
         cmds.button(label="Import Skin Weight", en=False, command=self.import_weight)
@@ -1452,17 +1453,7 @@ class BipadAutoRig():
         ## Add Shoulder Atribute
         
         
-        '''
         # Arm
-        ## Link IK,FK,Bind Arm Joints 
-        cmds.orientConstraint('arm_lf_ik_shoulder_jnt', 'arm_lf_fk_shoulder_jnt', 'arm_lf_bind_shoulder_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_lf_ik_elbow_jnt', 'arm_lf_fk_elbow_jnt', 'arm_lf_bind_elbow_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_lf_ik_wrist_jnt', 'arm_lf_fk_wrist_jnt', 'arm_lf_bind_wrist_jnt', w=1, mo=True)
-        
-        cmds.orientConstraint('arm_rt_ik_shoulder_jnt', 'arm_rt_fk_shoulder_jnt', 'arm_rt_bind_shoulder_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_rt_ik_elbow_jnt', 'arm_rt_fk_elbow_jnt', 'arm_rt_bind_elbow_jnt', w=1, mo=True)
-        cmds.orientConstraint('arm_rt_ik_wrist_jnt', 'arm_rt_fk_wrist_jnt', 'arm_rt_bind_wrist_jnt', w=1, mo=True)
-        '''
         ## Set Arm CTRL
         cmds.parentConstraint('arm_lf_fk_shoulder_jnt_ctrl', 'arm_lf_fk_shoulder_jnt', w=1, mo=True)
         cmds.parentConstraint('arm_lf_fk_elbow_jnt_ctrl', 'arm_lf_fk_elbow_jnt', w=1, mo=True)
@@ -1596,19 +1587,8 @@ class BipadAutoRig():
         cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
         cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
         
-        '''
-        # Leg
-        ## Link IK,FK,Bind Leg Joints 
-        cmds.orientConstraint('leg_lf_ik_tight_jnt', 'leg_lf_fk_tight_jnt', 'leg_lf_bind_tight_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_shin_jnt', 'leg_lf_fk_shin_jnt', 'leg_lf_bind_shin_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_ankle_jnt', 'leg_lf_fk_ankle_jnt', 'leg_lf_bind_ankle_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_lf_ik_ball_jnt', 'leg_lf_fk_ball_jnt', 'leg_lf_bind_ball_jnt', w=1, mo=True)
         
-        cmds.orientConstraint('leg_rt_ik_tight_jnt', 'leg_rt_fk_tight_jnt', 'leg_rt_bind_tight_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_shin_jnt', 'leg_rt_fk_shin_jnt', 'leg_rt_bind_shin_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_ankle_jnt', 'leg_rt_fk_ankle_jnt', 'leg_rt_bind_ankle_jnt', w=1, mo=True)
-        cmds.orientConstraint('leg_rt_ik_ball_jnt', 'leg_rt_fk_ball_jnt', 'leg_rt_bind_ball_jnt', w=1, mo=True)
-        '''
+        # Leg
         ## Create Leg IK Hadles
         ik_handle = cmds.ikHandle(sj='leg_lf_ik_tight_jnt', ee='leg_lf_ik_ankle_jnt', sol='ikRPsolver', p=2, w=1)[0]
         cmds.rename(ik_handle, 'lf_ankle_ikHandle')
