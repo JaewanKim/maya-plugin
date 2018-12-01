@@ -57,8 +57,8 @@ class BipadAutoRig():
         cmds.text("Generate IK,FK,BIND joint referred to dummy joint")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label="Create Controllers", command=self.create_ctrl)
-        cmds.text(" ")
+        cmds.button(label="STEP 3: Create Controllers", command=self.create_ctrl)
+        cmds.text("JO must be YZZ")
         cmds.separator(h=15, style='none', hr=True)
         
         cmds.button(label="Build", command=self.build)
@@ -586,14 +586,48 @@ class BipadAutoRig():
         
         cmds.hide('dummy_ch_grp')
         
-        cmds.reorder('head_jnt_grp', r=-4)
-        cmds.reorder('jaw_jnt_grp', r=-4)
-        cmds.reorder('neck_jnt_grp', r=-6)
-        cmds.reorder('shoulder_lf_jnt_grp', r=-8)
-        cmds.reorder('shoulder_rt_jnt_grp', r=-8)
-        cmds.reorder('spine_jnt_grp', r=-4)
-        cmds.reorder('pelvis_lf_jnt_grp', r=-2)
-        cmds.reorder('pelvis_rt_jnt_grp', r=-2)
+        #
+        cmds.group(empty=True, n='shoulder_jnt_grp')
+        constraint = cmds.parentConstraint('shoulder_lf_jnt_grp', 'shoulder_rt_jnt_grp', 'shoulder_jnt_grp', w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('shoulder_lf_jnt_grp', 'shoulder_jnt_grp')
+        cmds.parent('shoulder_rt_jnt_grp', 'shoulder_jnt_grp')
+        cmds.parent('shoulder_jnt_grp', 'jnt_grp')
+        
+        cmds.group(empty=True, n='arm_jnt_grp')
+        constraint = cmds.parentConstraint('arm_lf_jnt_grp', 'arm_rt_jnt_grp', 'arm_jnt_grp', w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('arm_lf_jnt_grp', 'arm_jnt_grp')
+        cmds.parent('arm_rt_jnt_grp', 'arm_jnt_grp')
+        cmds.parent('arm_jnt_grp', 'jnt_grp')
+        
+        cmds.group(empty=True, n='hand_jnt_grp')
+        constraint = cmds.parentConstraint('hand_lf_jnt_grp', 'hand_rt_jnt_grp', 'hand_jnt_grp', w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('hand_lf_jnt_grp', 'hand_jnt_grp')
+        cmds.parent('hand_rt_jnt_grp', 'hand_jnt_grp')
+        cmds.parent('hand_jnt_grp', 'jnt_grp')
+        
+        cmds.group(em=True, n='pelvis_jnt_grp')
+        constraint = cmds.parentConstraint('pelvis_lf_jnt_grp', 'pelvis_rt_jnt_grp', 'pelvis_jnt_grp', w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('pelvis_lf_jnt_grp', 'pelvis_jnt_grp')
+        cmds.parent('pelvis_rt_jnt_grp', 'pelvis_jnt_grp')
+        cmds.parent('pelvis_jnt_grp', 'jnt_grp')
+        
+        cmds.group(empty=True, n='leg_jnt_grp')
+        constraint = cmds.parentConstraint('leg_lf_jnt_grp', 'leg_rt_jnt_grp', 'leg_jnt_grp', w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.parent('leg_lf_jnt_grp', 'leg_jnt_grp')
+        cmds.parent('leg_rt_jnt_grp', 'leg_jnt_grp')
+        cmds.parent('leg_jnt_grp', 'jnt_grp')
+        
+        cmds.reorder('spine_jnt_grp', r=3)
         
         cmds.select(cl=True)
         
