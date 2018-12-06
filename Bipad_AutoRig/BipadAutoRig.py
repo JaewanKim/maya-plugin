@@ -316,25 +316,6 @@ class BipadAutoRig():
         cmds.select('pelvis_rt_001_jnt', hi=True)
         cmds.joint(e=True, oj='yzx', sao='zdown', ch=True, zso=True)
         cmds.select(clear=True)
-        '''
-        cmds.select('shoulder_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('arm_rt_ik_shoulder_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('thumb_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('index_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('middle_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('ring_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('pinky_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
-        cmds.select('pelvis_rt_001_jnt', hi=True)
-        cmds.joint(e=True, oj='xyz', sao='yup', ch=True, zso=True)
-        cmds.select(clear=True)
-        '''
         
         # Make up the Joint Groups
         shoulder_lf_jnt_grp = cmds.group(empty=True, parent='shoulder_jnt_grp', n="shoulder_lf_jnt_grp")
@@ -434,15 +415,18 @@ class BipadAutoRig():
         cmds.pointConstraint('dummy_pelvis_rt_002_jnt', 'dummy_leg_rt_ik_tight_jnt', w=1, mo=True)
         
         self.ctrl_gen(self)
+        self.root_ctrl(self)
+        cmds.group('root_ctrl', n='dummy_ctrl_grp')
+        cmds.rename('root_ctrl', 'dummy_root_ctrl')
+        cmds.parent('dummy_ctrl_grp', 'dummy_ch_grp')
+        cmds.scaleConstraint('dummy_root_ctrl', 'dummy_jnt_grp', w=1, mo=True)
+        cmds.parentConstraint('dummy_root_ctrl', 'dummy_jnt_grp', w=1, mo=True)
         
         self.color = 'PURPLE'
         cmds.select('dummy*')
         self.coloring_ctrl(self)
         
-        
-        
         cmds.select(clear=True)
-        
         
         
     def confirm_orient_joint(self, args):
@@ -1238,6 +1222,7 @@ class BipadAutoRig():
         jntAngle = [0,0,0]
         jntAngleSum = [0,0,0]
         ctrl_list = []
+        named_ctrl = ''
         
         for idx in range(0, len(selectedObjs)-1):    # Except Tip of Joint
             
@@ -1278,6 +1263,8 @@ class BipadAutoRig():
                 ctrl = self.arrow_ctrl(self)
             elif (self.shape == 'SPHERE'):
                 ctrl = self.sphere_ctrl(self)
+            elif (self.shape == 'Root'):
+                ctrl = self.root_ctrl(self)
             
             cmds.move(jntPosition[0], jntPosition[1], jntPosition[2], ctrl)
             cmds.rotate(jntAngleSum[0], jntAngleSum[1], jntAngleSum[2], ctrl)
@@ -1391,12 +1378,6 @@ class BipadAutoRig():
     
     def pelvis_ctrl(self, args):
         # Pelvis L CTRL
-        '''
-        ctrl = cmds.curve(d=1, p=[0, 0.4, 0.5], k=0) 
-        cmds.curve(ctrl, a=True, d=1, p=[ (0, 0.4, 0.5), (1.5, 0.15, 0.55), (1.5, 0.15, -0.55), (0, 0.4, -0.5), (0, 0.4, 0.5), (0, -0.5, 0.5), (0, -0.5, -0.5), (0, 0.4, -0.5), (0, -0.5, -0.5), (1.5, -0.45, -0.55), (1.5, 0.15, -0.55), (1.5, -0.45, -0.55), (1.5, -0.45, 0.55), (1.5, 0.15, 0.55), (1.5, -0.458, 0.55), (0, -0.5, 0.5) ] )
-        cmds.select(ctrl)
-        #cmds.rotate(0, 0, 15, r=True, os=True, xyz=True)
-        '''
         ctrl = cmds.curve(n='a', d=3,p=[ (17.843656, 20.178663, 17.843148), (12.080365, 22.618025, 18.512651), (7.86362, 39.020472, 7.619858), (-1.752994, 41.604984, 0.00413769), (-1.60196, 26.960052, -14.072872), (12.008345, 20.679325, -19.572681), (24.09459, 30.523275, -11.78492), (24.289722, 30.876347, 11.763753), (17.843656, 20.178663, 17.843148)])
         cmds.scale(0.05, 0.05, 0.05, ctrl)
         cmds.makeIdentity(apply=True, t=True, r=True, s=True)
@@ -1439,6 +1420,11 @@ class BipadAutoRig():
         cmds.move(-0.967, 0, 0.3, rpr=True)
         cmds.move(-0.967, 0.785, -0.193, ".scalePivot", ".rotatePivot", a=True)
         cmds.select(cl=True)
+        return ctrl
+    
+    def root_ctrl(self, args):
+        ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=5, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
+        cmds.rename(ctrl, 'root_ctrl')
         return ctrl
     
     # Coloring CTRL
