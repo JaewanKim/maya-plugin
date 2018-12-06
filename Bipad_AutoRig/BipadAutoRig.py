@@ -14,10 +14,10 @@ class BipadAutoRig():
             - Refactoring
         
         Things to do :
-            - arm PoleVector causes positional deviation of bone (CHECK ROTATAION VALUE)
+            - arm PoleVector causes positional deviation of bone (CHECK ROTATION VALUE)
             - Build (In progress)
-                - Head, Jaw, Neck Constraint
-                - Root Constraint
+                - Head, Jaw, Neck Constrain
+                - Root Constrain
                 - Set Attributes
                     - Shoulder/Pelvis Rot
                     - Wrist Rot
@@ -59,11 +59,15 @@ class BipadAutoRig():
         
         cmds.button(label="STEP 3: Create CTRLs", command=self.create_ctrl)
         cmds.text("CTRLs will be created by following JO(YZZ)")
-        cmds.text("Please adjust CTRLs to your liking")
+        cmds.text("Please adjust CTRLs in component mode")
         cmds.separator(h=15, style='none', hr=True)
         
-        cmds.button(label="STEP 4: Fix the CTRLs", command=self.build)
+        cmds.button(label="STEP 4: Fix the CTRLs", command=self.fix_ctrl)
         cmds.text("Connect Joints and CTRLs")
+        cmds.separator(h=15, style='none', hr=True)
+        
+        cmds.button(label="STEP 5: Bind Skin", command=self.bind)
+        cmds.text("Bind")
         cmds.separator(h=15, style='none', hr=True)
         
         cmds.button(label="Import Skin Weight", en=False, command=self.import_weight)
@@ -429,9 +433,13 @@ class BipadAutoRig():
         cmds.pointConstraint('dummy_pelvis_lf_002_jnt', 'dummy_leg_lf_ik_tight_jnt', w=1, mo=True)
         cmds.pointConstraint('dummy_pelvis_rt_002_jnt', 'dummy_leg_rt_ik_tight_jnt', w=1, mo=True)
         
+        self.ctrl_gen(self)
+        
         self.color = 'PURPLE'
-        cmds.select('dummy_*jnt')
+        cmds.select('dummy*')
         self.coloring_ctrl(self)
+        
+        
         
         cmds.select(clear=True)
         
@@ -702,7 +710,35 @@ class BipadAutoRig():
         #
         
         # Spine
-        cmds.select('spine_jnt_grp')
+        cmds.duplicate('spine_ik_bind_001_jnt', rc=True)
+        
+        cmds.select('spine_ik_bind_001_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        tmp_bind = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_bind[i] = tmp_ik[i].replace('ik_bind', 'fk')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_bind[i].split("|")[-1])
+        
+        cmds.select('spine_fk_001_jnt1', hi=True)
+        tmp_ik = cmds.ls(sl=True)
+        tmp_fk = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for i in range(0, len(tmp_ik)):
+            tmp_fk[i] = tmp_ik[i].replace('t1', 't')
+            cmds.rename(tmp_ik[i].split("|")[-1], tmp_fk[i].split("|")[-1])
+        #
+        cmds.select('spine_fk_001_jnt', hi=True)
+        sel = cmds.ls(sl=True)
+        for s in sel:
+            cmds.parent(s, w=True)
+        cmds.delete('spine_fk_003_jnt', 'spine_fk_004_jnt', 'spine_fk_005_jnt', 'spine_fk_007_jnt', 'spine_fk_008_jnt')
+        cmds.parent('spine_fk_002_jnt', 'spine_fk_001_jnt')
+        cmds.parent('spine_fk_006_jnt', 'spine_fk_002_jnt')
+        cmds.parent('spine_fk_009_jnt', 'spine_fk_006_jnt')
+        
+        cmds.parent('spine_fk_001_jnt', 'spine_jnt_grp')
+        
+        '''
         cmds.joint(a=True, p=[0, 8.869, 0.316], rad=0.6, n='spine_fk_001_jnt')
         cmds.joint(a=True, p=[0, 9.742, 0.404], rad=0.6, n='spine_fk_002_jnt')
         cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
@@ -711,7 +747,7 @@ class BipadAutoRig():
         cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='spine_fk_009_jnt')
         cmds.joint(e=True, zso=True, oj='xyz', sao='yup')
         
-        cmds.select('spine_fk_001_jnt', hi=True)
+        cmds.select('spine_fk_001_jnt', hi=True)'''
         cmds.joint(e=True, oj='yzx', sao='zup', ch=True, zso=True)
         
         # Left Leg
@@ -1030,9 +1066,22 @@ class BipadAutoRig():
                 cmds.rename('spine_ik_bind_008_jnt_ctrl_grp', 'upper_body_ctrl_grp')
                 cmds.rename('spine_ik_bind_008_jnt_ctrl', 'upper_body_ctrl')
                 
-                cmds.joint(a=True, p=[0, 8.869, 0.316], rad=0.6, n='lower_body_jnt')
+                '''
+                
+                cmds.group(em=True, n='spine_jnt_grp')
+                t = cmds.xform('spine_ik_bind_001_jnt', r=True, q=True, t=True)
+                cmds.move(t[0], t[1], t[2], 'spine_jnt_grp')
+                cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+                cmds.parent('spine_ik_bind_001_jnt', 'spine_jnt_grp')
+                '''
+                cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+                
+                t = cmds.xform('spine_ik_bind_001_jnt', r=True, q=True, t=True)
+                cmds.joint(a=True, p=[t[0], t[1], t[2]], rad=0.6, n='lower_body_jnt')
                 cmds.parent('lower_body_jnt', 'lower_body_ctrl')
-                cmds.joint(a=True, p=[0, 11.847, 0.188], rad=0.6, n='upper_body_jnt')
+                
+                t = cmds.xform('spine_ik_bind_001_jnt', r=True, q=True, t=True)
+                cmds.joint(a=True, p=[t[0], t[1], t[2]], rad=0.6, n='upper_body_jnt')
                 cmds.parent('upper_body_jnt', 'upper_body_ctrl')
                 cmds.select('upper_body_ctrl')
                 cmds.move(0, 11.847, 0.188, ".scalePivot", ".rotatePivot", a=True)
@@ -1342,10 +1391,19 @@ class BipadAutoRig():
     
     def pelvis_ctrl(self, args):
         # Pelvis L CTRL
+        '''
         ctrl = cmds.curve(d=1, p=[0, 0.4, 0.5], k=0) 
         cmds.curve(ctrl, a=True, d=1, p=[ (0, 0.4, 0.5), (1.5, 0.15, 0.55), (1.5, 0.15, -0.55), (0, 0.4, -0.5), (0, 0.4, 0.5), (0, -0.5, 0.5), (0, -0.5, -0.5), (0, 0.4, -0.5), (0, -0.5, -0.5), (1.5, -0.45, -0.55), (1.5, 0.15, -0.55), (1.5, -0.45, -0.55), (1.5, -0.45, 0.55), (1.5, 0.15, 0.55), (1.5, -0.458, 0.55), (0, -0.5, 0.5) ] )
         cmds.select(ctrl)
         #cmds.rotate(0, 0, 15, r=True, os=True, xyz=True)
+        '''
+        ctrl = cmds.curve(n='a', d=3,p=[ (17.843656, 20.178663, 17.843148), (12.080365, 22.618025, 18.512651), (7.86362, 39.020472, 7.619858), (-1.752994, 41.604984, 0.00413769), (-1.60196, 26.960052, -14.072872), (12.008345, 20.679325, -19.572681), (24.09459, 30.523275, -11.78492), (24.289722, 30.876347, 11.763753), (17.843656, 20.178663, 17.843148)])
+        cmds.scale(0.05, 0.05, 0.05, ctrl)
+        cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+        cmds.closeCurve(ctrl, ch=True, ps=True, rpo=True)
+        constraint = cmds.parentConstraint('pelvis_lf_001_jnt', ctrl, w=1, mo=False)
+        cmds.delete(constraint)
+        cmds.move(1.1, 1.1, 0, ctrl+'.cv[0:8]', r=True)
         return ctrl
     
     def arrow_ctrl(self, args):
@@ -1425,7 +1483,7 @@ class BipadAutoRig():
         cmds.select(cl=True)
     
     
-    def build(self, args):
+    def fix_ctrl(self, args):
         '''
             STEP 4: Build
         '''
@@ -2438,9 +2496,16 @@ class BipadAutoRig():
         cmds.select(clear=True)
     
     
+    def bind(self, args):
+        '''
+            STEP 5: Bind skin
+        '''
+        pass
+    
+    
     def import_weight(self, args):
         '''
-            STEP 5: Import Weight
+            STEP 6: Import Weight
         '''
         pass
         cmds.fileBrowserDialog(mode=0, fileCommand=self.apply_weight, fileType='directory', an='Import weight', operationMode='Import')
