@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import math
 
 class BipadAutoRig():
     '''
@@ -930,10 +931,12 @@ class BipadAutoRig():
                 self.ctrl_gen(self)
                 #
                 ctrl = self.arrow_ctrl(self)
-                cmds.move(4.556, 9.612, -0.458, ctrl)
+                constraint = cmds.pointConstraint('arm_lf_bind_wrist_jnt', ctrl, w=1, mo=False)
+                cmds.delete(constraint)
                 cmds.rename(ctrl, 'arm_lf_switch')
                 ctrl = self.arrow_ctrl(self)
-                cmds.move(-4.556, 9.612, -0.458, ctrl)
+                constraint = cmds.pointConstraint('arm_rt_bind_wrist_jnt', ctrl, w=1, mo=False)
+                cmds.delete(constraint)
                 cmds.rename(ctrl, 'arm_rt_switch')
                 cmds.select('arm_lf_switch', 'arm_rt_switch')
                 cmds.makeIdentity(apply=True, t=True, s=True)
@@ -1058,7 +1061,7 @@ class BipadAutoRig():
                 cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 cmds.parent('spine_ik_bind_001_jnt', 'spine_jnt_grp')
                 '''
-                cmds.makeIdentity(apply=True, t=True, r=True, s=True)
+                #cmds.makeIdentity(apply=True, t=True, r=True, s=True)
                 
                 t = cmds.xform('spine_ik_bind_001_jnt', r=True, q=True, t=True)
                 cmds.joint(a=True, p=[t[0], t[1], t[2]], rad=0.6, n='lower_body_jnt')
@@ -1117,10 +1120,12 @@ class BipadAutoRig():
                 self.ctrl_gen(self)
                 
                 ctrl = self.arrow_ctrl(self)
-                cmds.move(0.967, 0.785, -0.193, ctrl)
+                constraint = cmds.pointConstraint('leg_lf_bind_ankle_jnt', ctrl, w=1, mo=False)
+                cmds.delete(constraint)
                 cmds.rename(ctrl, 'leg_lf_switch')
                 ctrl = self.arrow_ctrl(self)
-                cmds.move(-0.967, 0.785, -0.193, ctrl)
+                constraint = cmds.pointConstraint('leg_rt_bind_ankle_jnt', ctrl, w=1, mo=False)
+                cmds.delete(constraint)
                 cmds.rename(ctrl, 'leg_rt_switch')
                 cmds.select('leg_lf_switch', 'leg_rt_switch')
                 cmds.makeIdentity(apply=True, t=True, s=True)
@@ -1270,6 +1275,10 @@ class BipadAutoRig():
             cmds.rotate(jntAngleSum[0], jntAngleSum[1], jntAngleSum[2], ctrl)
             
             grp = cmds.group(empty=True, n=ctrl_grp_name)
+            s = cmds.xform('dummy_root_ctrl', r=True, q=True, s=True)
+            
+            cmds.scale(s[0], s[1], s[2], ctrl)
+            cmds.makeIdentity(apply=True, t=True, r=True, s=True)
             
             cmds.move(jntPosition[0], jntPosition[1], jntPosition[2], grp)
             cmds.rotate(jntAngleSum[0], jntAngleSum[1], jntAngleSum[2], grp)
