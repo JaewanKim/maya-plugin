@@ -1233,9 +1233,9 @@ class BipedAutoRig():
         self.coloring_ctrl(self)
         
         self.color = 'SKYBLUE'
-        cmds.select('*_body_ctrl')
+        cmds.select('*_body_ctrl', 'root*ctrl')
         self.coloring_ctrl(self)
-        
+    
     
     # Generate CTRL
     def ctrl_gen(self, args):
