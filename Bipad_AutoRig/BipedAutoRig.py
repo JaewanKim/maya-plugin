@@ -883,10 +883,10 @@ class BipedAutoRig():
                 cmds.parent('neck_001_jnt_ctrl_grp', neck_ctrl_grp)
             
             elif (obj == 'shoulder_jnt_grp'):
-                self.shape = 'SHOULDER'
-                
+                self.shape = 'SHOULDER_L'
                 cmds.select('shoulder_lf_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
+                self.shape = 'SHOULDER_R'
                 cmds.select('shoulder_rt_001_jnt', hi=True)
                 ctrl = self.ctrl_gen(self)
                 
@@ -1263,8 +1263,10 @@ class BipedAutoRig():
                 ctrl = self.jaw_ctrl(self)
             elif(self.shape == 'NECK'):
                 ctrl = self.neck_ctrl(self)
-            elif(self.shape == 'SHOULDER'):
-                ctrl = self.shoulder_ctrl(self)
+            elif(self.shape == 'SHOULDER_L'):
+                ctrl = self.shoulder_lf_ctrl(self)
+            elif(self.shape == 'SHOULDER_R'):
+                ctrl = self.shoulder_rt_ctrl(self)
             elif(self.shape == 'ARM'):
                 ctrl = self.circle_ctrl(self)
             elif(self.shape == 'BODY'):
@@ -1342,7 +1344,7 @@ class BipedAutoRig():
         cmds.select(clear=True)
         return ctrl
     
-    def shoulder_ctrl(self, args):
+    def shoulder_lf_ctrl(self, args):
         ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.2, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
         cmds.softSelect(sse=1)
         cmds.select(str(ctrl) + '.cv[3]')
@@ -1355,6 +1357,22 @@ class BipedAutoRig():
         cmds.softSelect(sse=0)
         cmds.select(str(ctrl) + '.cv[0:7]')
         cmds.move(0, 2, 0, r=True)
+        cmds.select(clear=True)
+        return ctrl
+    
+    def shoulder_rt_ctrl(self, args):
+        ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=0.2, d=3, ut=0, tol=0.01, s=8, ch=1)[0]
+        cmds.softSelect(sse=1)
+        cmds.select(str(ctrl) + '.cv[3]')
+        cmds.select(str(ctrl) + '.cv[7]', add=True)
+        cmds.move(0, -0.2, 0, r=True)
+        cmds.select(str(ctrl) + '.cv[1]')
+        cmds.select(str(ctrl) + '.cv[5]', add=True)
+        cmds.move(0, 0.2, 0, r=True)
+        cmds.select(clear=True)
+        cmds.softSelect(sse=0)
+        cmds.select(str(ctrl) + '.cv[0:7]')
+        cmds.move(0, -2, 0, r=True)
         cmds.select(clear=True)
         return ctrl
     
@@ -2515,6 +2533,9 @@ class BipedAutoRig():
         
         # Root X, Y, Z
         cmds.parentConstraint('root_x_ctrl', 'ctrl_grp', w=1, mo=True)
+        cmds.scaleConstraint('root_x_ctrl', 'ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('root_x_ctrl', 'jnt_grp', w=1, mo=True)
+        cmds.scaleConstraint('root_x_ctrl', 'jnt_grp', w=1, mo=True)
         
         cmds.select(clear=True)
     
