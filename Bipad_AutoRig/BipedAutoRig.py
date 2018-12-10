@@ -1,9 +1,9 @@
 import maya.cmds as cmds
 import math
 
-class BipadAutoRig():
+class BipedAutoRig():
     '''
-        Description : Bipad_AutoRig.py made by JW
+        Description : Biped_AutoRig.py made by JW
             STEP 1. Create Joints
             STEP 2. Check Joint Orientation
             STEP 3. Create Controllers
@@ -28,10 +28,10 @@ class BipadAutoRig():
     def __init__(self):
         
         # Window
-        if (cmds.window("Bipad_AutoRig", exists=True)):
-            cmds.deleteUI("Bipad_AutoRig", window=True)
+        if (cmds.window("Biped_AutoRig", exists=True)):
+            cmds.deleteUI("Biped_AutoRig", window=True)
         
-        self.win = cmds.window("Bipad_AutoRig", title="Bipad_AutoRig", sizeable=True, resizeToFitChildren=True, menuBar=True)
+        self.win = cmds.window("Biped_AutoRig", title="Biped_AutoRig", sizeable=True, resizeToFitChildren=True, menuBar=True)
         
         # Menu Bar
         fileMenu = cmds.menu(label="Edit")
@@ -445,7 +445,6 @@ class BipadAutoRig():
         cmds.select(clear=True)
         
         
-        
     def fix_jnt(self, args):
         '''
             STEP 2: Fix the Joint
@@ -839,7 +838,7 @@ class BipadAutoRig():
         jointGrps = []
         selectedJnts = []
         
-        for grps in selectedGrps:       # Save jnt_grp & bodypart_grp in jointGrps
+        for grps in selectedGrps:    	# Save jnt_grp & bodypart_grp in jointGrps
             if (cmds.objectType(grps) == 'transform'):
                 jointGrps.append(grps)
         
@@ -1131,6 +1130,14 @@ class BipadAutoRig():
                 cmds.makeIdentity(apply=True, t=True, s=True)
                 
                 ctrl = self.foot_lf_ctrl(self)
+                '''
+                t = cmds.xform('joint1', a=True, q=True, t=True)
+                cmds.move(t[0], t[1], t[2], ".scalePivot", ".rotatePivot", a=True)
+                cmds.move(0.967, 0, 0.3, rpr=True)
+                t = cmds.xform('joint1', a=True, q=True, t=True)
+                cmds.move(t[0], t[1], t[2], ".scalePivot", ".rotatePivot", r=True)
+                cmds.move(0.967, 0.785, -0.193, ".scalePivot", ".rotatePivot", a=True)
+                '''
                 cmds.rename(ctrl, 'foot_lf_ik_ctrl')
                 ctrl = self.foot_rt_ctrl(self)
                 cmds.rename(ctrl, 'foot_rt_ik_ctrl')
@@ -1181,7 +1188,18 @@ class BipadAutoRig():
                 cmds.rename('leg_lf_ik_shin_jnt_ctrl', 'leg_lf_pv_ctrl')
                 cmds.rename('leg_rt_ik_shin_jnt_ctrl', 'leg_rt_pv_ctrl')
         
-        # Eye CTRL
+        # Root CTRL
+        cmds.group(em=True, n='root_x_ctrl_grp', p='ch_grp')
+        root_x_ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=5, d=3, ut=0, tol=0.01, s=8, ch=1, n='root_x_ctrl')[0]
+        cmds.group(em=True, n='root_y_ctrl_grp', p='ch_grp')
+        root_y_ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=5.5, d=3, ut=0, tol=0.01, s=8, ch=1, n='root_y_ctrl')[0]
+        cmds.group(em=True, n='root_z_ctrl_grp', p='ch_grp')
+        root_z_ctrl = cmds.circle(c=(0,0,0), nr=(0,1,0), sw=360, r=6, d=3, ut=0, tol=0.01, s=8, ch=1, n='root_z_ctrl')[0]
+        cmds.parent('root_x_ctrl', 'root_x_ctrl_grp')
+        cmds.parent('root_y_ctrl', 'root_y_ctrl_grp')
+        cmds.parent('root_z_ctrl', 'root_z_ctrl_grp')
+        cmds.parent('root_x_ctrl_grp', 'root_y_ctrl')
+        cmds.parent('root_y_ctrl_grp', 'root_z_ctrl')
         
         # CTRL Grouping
         ctrl_grp = cmds.group(empty=True, p="ch_grp", n="ctrl_grp")
@@ -1217,6 +1235,7 @@ class BipadAutoRig():
         self.color = 'SKYBLUE'
         cmds.select('*_body_ctrl')
         self.coloring_ctrl(self)
+        
     
     # Generate CTRL
     def ctrl_gen(self, args):
@@ -1268,7 +1287,7 @@ class BipadAutoRig():
                 ctrl = self.arrow_ctrl(self)
             elif (self.shape == 'SPHERE'):
                 ctrl = self.sphere_ctrl(self)
-            elif (self.shape == 'Root'):
+            elif (self.shape == 'ROOT'):
                 ctrl = self.root_ctrl(self)
             
             cmds.move(jntPosition[0], jntPosition[1], jntPosition[2], ctrl)
@@ -1428,6 +1447,12 @@ class BipadAutoRig():
         cmds.scale(0.8, 0.8, 0.8, r=True)
         cmds.move(-0.967, 0, 0.3, rpr=True)
         cmds.move(-0.967, 0.785, -0.193, ".scalePivot", ".rotatePivot", a=True)
+        '''
+        t = cmds.xform('leg_rt_bind_ball_jnt', a=True, q=True, t=True)
+        cmds.move(t[0], t[1], t[2], ctrl)
+        t = cmds.xform('leg_rt_bind_ankle_jnt', a=True, q=True, t=True)
+        cmds.move(t[0], t[1], t[2], ".scalePivot", ".rotatePivot", a=True)
+        '''
         cmds.select(cl=True)
         return ctrl
     
@@ -1480,7 +1505,7 @@ class BipadAutoRig():
     
     def fix_ctrl(self, args):
         '''
-            STEP 4: Build
+            STEP 4: Fix the CTRLs (Build)
         '''
         
         # Head
@@ -2488,6 +2513,9 @@ class BipadAutoRig():
         
         cmds.setAttr('foot_rt_ik_ctrl.Bank', 0)
         
+        # Root X, Y, Z
+        cmds.parentConstraint('root_x_ctrl', 'ctrl_grp', w=1, mo=True)
+        
         cmds.select(clear=True)
     
     
@@ -2514,4 +2542,4 @@ class BipadAutoRig():
         cmds.showHelp("https://github.com/JaewanKim/maya-plugin", absolute=True)
 
 
-BipadAutoRig()
+BipedAutoRig()
