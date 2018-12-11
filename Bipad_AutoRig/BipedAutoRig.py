@@ -1536,6 +1536,11 @@ class BipedAutoRig():
         cmds.parentConstraint('neck_001_jnt_ctrl', 'neck_001_jnt', w=1, mo=True)
         cmds.parentConstraint('neck_002_jnt_ctrl', 'neck_002_jnt', w=1, mo=True)
         
+        # Head, Jaw, Neck Constraint
+        cmds.parentConstraint('head_001_jnt_ctrl', 'jaw_001_jnt_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('neck_003_jnt', 'head_ctrl_grp', w=1, mo=True)
+        cmds.parentConstraint('neck_003_jnt', 'jaw_ctrl_grp', w=1, mo=True)
+        
         # Shoulder
         ## Shoulder CTRL
         cmds.parentConstraint('shoulder_lf_001_jnt_ctrl', 'shoulder_lf_001_jnt', w=1, mo=True)
@@ -1650,7 +1655,6 @@ class BipedAutoRig():
         cmds.parentConstraint('pinky_rt_002_jnt_ctrl', 'pinky_rt_002_jnt', w=1, mo=True)
         cmds.parentConstraint('pinky_rt_003_jnt_ctrl', 'pinky_rt_003_jnt', w=1, mo=True)
         
-        
         # Spine
         ## Set Spine CTRL
         cmds.parentConstraint('spine_fk_001_jnt', 'lower_body_ctrl_grp', w=1, mo=True)
@@ -1682,7 +1686,6 @@ class BipedAutoRig():
         cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_jnt_grp', w=1, mo=True)
         cmds.pointConstraint('pelvis_lf_002_jnt', 'leg_lf_fk_tight_jnt_ctrl_grp', w=1, mo=True)
         cmds.pointConstraint('pelvis_rt_002_jnt', 'leg_rt_fk_tight_jnt_ctrl_grp', w=1, mo=True)
-        
         
         # Leg
         ## Create Leg IK Hadles
